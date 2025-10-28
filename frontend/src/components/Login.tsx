@@ -52,14 +52,17 @@ function Login()
 
     return(
       <div id="loginDiv">
-        <span id="inner-title">PLEASE LOG IN</span><br />
-        <input type="text" id="loginName" placeholder="Username" 
+        <span id="inner-title">Sign in or Create Account</span><br />
+        <input type="text" id="loginName" placeholder="Username or Email" 
           onChange={handleSetLoginName} /><br />
         <input type="password" id="loginPassword" placeholder="Password" 
           onChange={handleSetPassword} /><br />
-        <input type="submit" id="loginButton" className="buttons" value = "Do It"
+        <input type="submit" id="loginButton" className="buttons" value = "LOG IN"
           onClick={doLogin} />
-        <span id="loginResult">{message}</span>
+	<span id="loginResult">{message}</span>
+	<input type="submit" id="CreateAccountButton" className="buttons" value = "CREATE ACCOUNT"
+          onClick={doLogin} />
+        
      </div>
     );
 };
