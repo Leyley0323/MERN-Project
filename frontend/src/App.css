@@ -1,0 +1,124 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  min-height: 100vh;
+}
+
+#title {
+  font-size: 2em;
+  margin: 20px 0;
+}
+
+#loginDiv {
+  margin: 20px auto;
+  width: 300px;
+  text-align: left;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#inner-title {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+#loginDiv input[type="text"],
+#loginDiv input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
+
+#loginDiv input[type="submit"],
+.buttons {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.buttons:hover {
+  background-color: #45a049;
+}
+
+#loginResult {
+  display: block;
+  margin-top: 10px;
+  color: red;
+}
+
+#loggedInDiv {
+  margin: 20px 0;
+  text-align: right;
+  padding: 10px;
+}
+
+#userName {
+  margin-right: 10px;
+}
+
+#accessUIDiv {
+  margin: 20px auto;
+  width: 600px;
+  text-align: left;
+}
+
+#accessUIDiv input[type="text"] {
+  padding: 8px;
+  margin: 5px;
+  box-sizing: border-box;
+}
+
+#cardSearchResult, #cardAddResult {
+  display: block;
+  margin-top: 10px;
+  color: green;
+}
+
+#cardList {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
