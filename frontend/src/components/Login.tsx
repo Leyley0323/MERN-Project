@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Login()
 {
   const [message,setMessage] = React.useState('');
   const [loginName,setLoginName] = React.useState('');
   const [loginPassword,setPassword] = React.useState('');
+  const navigate = useNavigate();
 
   async function doLogin(event:any) : Promise<void>
   {
@@ -50,20 +52,26 @@ function Login()
     setPassword( e.target.value );
   }
 
+    function doSignUp(event: any): void {
+      event.preventDefault();
+      navigate('/signup');
+    }
+
     return(
       <div id="loginDiv">
-        <span id="inner-title">Sign in or Create Account</span><br />
+        <span id="inner-title">Sign in to Start Shoping</span><br />
         <input type="text" id="loginName" placeholder="Username or Email" 
           onChange={handleSetLoginName} /><br />
         <input type="password" id="loginPassword" placeholder="Password" 
           onChange={handleSetPassword} /><br />
         <input type="submit" id="loginButton" className="buttons" value = "LOG IN"
           onClick={doLogin} />
-	<span id="loginResult">{message}</span>
-	<input type="submit" id="CreateAccountButton" className="buttons" value = "CREATE ACCOUNT"
-          onClick={doLogin} />
+      <span id="loginResult">{message}</span>
+      <span id="signuptitle">Don't Have An Account? </span>
+      <input type="submit" id="CreateAccountButton" className="buttons" value = "CREATE ACCOUNT"
+          onClick={doSignUp} />
         
-     </div>
+    </div>
     );
 };
 
