@@ -234,3 +234,8 @@ function HomePage() {
 }
 
 export default HomePage;
+
+
+
+/*NOTES*/
+/*automattically sort by location in the List */
