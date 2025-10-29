@@ -8,7 +8,7 @@ function PageTitle() {
       <img src={logo} alt="Cheap Cart Logo" width="100" height="100" />
 
       {/* Title text */}
-      <h1 id="title">Welcome to Cheap Cart!</h1>
+      <h1 id="title">Shop Smart with Cheap Cart!</h1>
     </div>
   );
 }
