@@ -44,8 +44,14 @@
   margin-top: 10px;
 }
 
-.buttons:hover {
+.buttons:hover{
   background-color: #45a049;
+  color: #09350b;
+  opacity: .6;
+  transform: translateY(-2px);
+}
+.buttons:active{
+  transform: translateY(-1px);
 }
 
 #loginResult {
@@ -121,4 +127,23 @@
 
 .read-the-docs {
   color: #888;
+}
+
+#signupdiv{
+  margin: 20px auto;
+  width: 300px;
+  text-align: left;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#signupdiv input[type="submit"], .buttons {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
 }
