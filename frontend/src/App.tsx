@@ -7,6 +7,7 @@ import CardPage from './pages/CardPage';
 import LoginPage from './pages/LoginPage';
 import SignUp from './components/SignUp.tsx';
 import SignUpPage from './pages/SignUpPage';
+import ShoppingList from './pages/ShoppingList';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/SignUp.tsx" element={<SignUp />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/shoppinglist" element={<ShoppingList />} />
       </Routes>  
     </Router>
   );
