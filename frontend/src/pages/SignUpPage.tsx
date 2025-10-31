@@ -1,15 +1,15 @@
 import React from 'react';
+import logo from "../assets/logo.png";
+import SignUp from '../components/SignUp.tsx';
 
-function SignUp() {
+function SignUpPage() {
         return (
         <div>
-        <h2>Create Account</h2>
-        <input type="text" placeholder="Email" /><br />
-        <input type="text" placeholder="Username" /><br />
-        <input type="password" placeholder="Password" /><br />
-        <button>Create Account</button>
+        {/* SVG image */}
+        <img src={logo} alt="Cheap Cart Logo" width="100" height="100" />
+        <SignUp />
         </div>
     );
 }
 
-export default SignUp;
+export default SignUpPage;
