@@ -35,7 +35,7 @@
 
 #loginDiv input[type="submit"],
 .buttons {
-  background-color: #4CAF50;
+  background-color: #0d6b0d;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -45,7 +45,7 @@
 }
 
 .buttons:hover{
-  background-color: #45a049;
+  background-color: #0d6b0d;
   color: #09350b;
   opacity: .6;
   transform: translateY(-2px);
@@ -138,8 +138,9 @@
   border-radius: 5px;
 }
 
+
 #signupdiv input[type="submit"], .buttons {
-  background-color: #4CAF50;
+  background-color: #0d6b0d;
   color: white;
   padding: 10px 20px;
   border: none;
