@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "../HomePage.css";
+import { Link } from "react-router-dom";
+
 
 interface SearchResult {
   name: string;
@@ -18,6 +20,7 @@ function HomePage() {
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentWord, setCurrentWord] = useState<number>(0);
+  
 
   const cyclingWords = ["fast", "reliable", "simple", "easy", "cheap"];
 
@@ -108,7 +111,7 @@ function HomePage() {
             </button>
           </div>
           <nav className="nav">
-            <a href="/Login" className="nav-link">
+            <Link to="/shoppinglist" className="nav-link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -120,11 +123,15 @@ function HomePage() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
               </svg>
-              Sign In
-            </a>
+              Shopping List
+            </Link>
             <a href="#" className="nav-link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
