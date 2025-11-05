@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import SignUp from './components/SignUp.tsx';
 import SignUpPage from './pages/SignUpPage';
 import ShoppingList from './pages/ShoppingList';
+import CheckoutPage from './pages/Checkout.tsx';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/SignUp.tsx" element={<SignUp />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/shoppinglist" element={<ShoppingList />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
       </Routes>  
     </Router>
   );

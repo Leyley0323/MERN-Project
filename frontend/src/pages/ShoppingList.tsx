@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Button} from '../components/ShopListUI/continueShopping';
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Define a simple type for products
 type CartItem = {
@@ -46,51 +47,25 @@ export default function CartListPage() {
       minHeight: "100vh",        
       margin: 0,
       padding: 0,
-    }}>
-    
-      {/*Buttons*/}
-      <div
+      }}>
+      
+        {/*Buttons*/}
+        <div
         style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        padding: "20px 40px",
-        borderTop: "1px solid #ddd",
-        gap: "12px",            
-      }}
-    >
-      <Button
-        onClick={() => navigate("/")}
-        style={{
-          backgroundColor: "#f7df05ff",   
-          color: "#000000ff",
-          fontWeight: 600,
-          borderRadius: "8px",
-          padding: "10px 24px",
-          border: "none",
-          cursor: "pointer",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-          transition: "all 0.2s ease-in-out",
-        }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#03b320ff")}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f7df05ff")}
-      >
-        Continue Shopping
-      </Button>
-    </div>
-
-      <div
-        style={{
-          position: "fixed",
-          right: "24px",
-          bottom: "24px",
-          zIndex: 1000,           
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          padding: "20px 40px",
+          borderTop: "1px solid #ddd",
+          gap: "12px",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <Button
           onClick={() => navigate("/")}
           style={{
-            backgroundColor: "#f7df05ff",   
+            backgroundColor: "#f7df05ff",
             color: "#000000ff",
             fontWeight: 600,
             borderRadius: "8px",
@@ -100,13 +75,50 @@ export default function CartListPage() {
             boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
             transition: "all 0.2s ease-in-out",
           }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#03b320ff")}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f7df05ff")}
+          onMouseOver={(e) =>
+            (e.currentTarget.style.backgroundColor = "#03b320ff")
+          }
+          onMouseOut={(e) =>
+            (e.currentTarget.style.backgroundColor = "#f7df05ff")
+          }
+        >
+          Continue Shopping
+        </Button>
+      </div>
+
+      {/* Fixed Checkout button */}
+      <div
+        style={{
+          position: "fixed",
+          right: "24px",
+          bottom: "24px",
+          zIndex: 9999, 
+        }}
+      >
+        <Button
+          onClick={() => navigate("/checkout")}
+          style={{
+            backgroundColor: "#f7df05ff",
+            color: "#000000ff",
+            fontWeight: 600,
+            borderRadius: "8px",
+            padding: "10px 24px",
+            border: "none",
+            cursor: "pointer",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            transition: "all 0.2s ease-in-out",
+          }}
+          onMouseOver={(e) =>
+            (e.currentTarget.style.backgroundColor = "#03b320ff")
+          }
+          onMouseOut={(e) =>
+            (e.currentTarget.style.backgroundColor = "#f7df05ff")
+          }
         >
           Checkout
         </Button>
-      </div>
-{/*-------------------------------------------------------------------------------------*/}
+    </div>
+    {/*-------------------------------------------------------------------------------------*/}
 
       <div style={{ 
          maxWidth: "600px",
