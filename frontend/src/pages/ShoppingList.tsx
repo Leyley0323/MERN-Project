@@ -3,7 +3,7 @@ import {Button} from '../components/ShopListUI/continueShopping';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-// Define a simple type for products
+
 type CartItem = {
   id: number;
   name: string;
@@ -86,7 +86,7 @@ export default function CartListPage() {
         </Button>
       </div>
 
-      {/* Fixed Checkout button */}
+
       <div
         style={{
           position: "fixed",
@@ -117,7 +117,7 @@ export default function CartListPage() {
         >
           Checkout
         </Button>
-    </div>
+      </div>
     {/*-------------------------------------------------------------------------------------*/}
 
       <div style={{ 
