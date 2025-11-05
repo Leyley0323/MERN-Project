@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "../HomePage.css";
+import { Link } from "react-router-dom";
+
 
 interface SearchResult {
   name: string;
@@ -134,7 +136,7 @@ function HomePage() {
                 <button className="nav-link logout-btn" onClick={handleLogout}>
                   Log Out
                 </button>
-                <a href="#" className="nav-link">
+               <Link to="/shoppinglist" className="nav-link">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -154,7 +156,7 @@ function HomePage() {
                     <line x1="3" y1="18" x2="3.01" y2="18"></line>
                   </svg>
                   Shopping List
-                </a>
+                </Link>
               </>
             ) : (
               <>
