@@ -25,6 +25,12 @@ export default function CartListPage() {
       { id: 1, name: "Apples", price: 1.99, quantity: 3 },
       { id: 2, name: "Bread", price: 2.49, quantity: 1 },
       { id: 3, name: "Milk", price: 3.29, quantity: 2 },
+      { id: 4, name: "Headphones", price: 1.99, quantity: 3 },
+      { id: 5, name: "TV", price: 300.00, quantity: 1 },
+      { id: 6, name: "Mouse", price: 20.00, quantity: 2 },
+      { id: 7, name: "Car", price: 20000.00, quantity: 1 },
+      { id: 8, name: "House", price: 40.00, quantity: 1 },
+      { id: 9, name: "Fan", price: 1.99, quantity: 3 },
     ];
     setCartItems(sampleCart);
   }, []);
@@ -116,7 +122,12 @@ export default function CartListPage() {
         > Your Cart</h1>
 
       {cartItems.length === 0 ? (
-        <p style={{ textAlign: "center" }}>Your cart is empty.</p> 
+        <p style={{ 
+          textAlign: "center",
+          color: "#ffffff" }}
+        >
+          Your cart is empty.
+          </p> 
       ) : (
         <ul style={{ 
           listStyleType: "none", 
