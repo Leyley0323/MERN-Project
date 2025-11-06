@@ -1,62 +1,98 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../App.css';
-import logo from "../assets/logo.png";
 
-function Signup() {
-    const [email, setEmail] = React.useState('');
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [message, setMessage] = React.useState('');
-    const [firstname, setFirstName] = React.useState('');
-    const [lastname, setLastName] = React.useState('');
-    const navigate = useNavigate();
+function Signup()
+{
+  const [message,setMessage] = React.useState('');
+  const [firstName,setFirstName] = React.useState('');
+  const [lastName,setLastName] = React.useState('');
+  const [email,setEmail] = React.useState('');
+  const [login,setLogin] = React.useState('');
+  const [password,setPassword] = React.useState('');
 
-    async function doSignup(event: any) {
+  async function doSignup(event:any) : Promise<void>
+  {
     event.preventDefault();
-    const obj = { username, password, email, firstname, lastname };
-    const js = JSON.stringify(obj);
 
-    try {
-        const response = await fetch('http://localhost:5001/api/register', {
-        method: 'POST',
-        body: js,
-        headers: { 'Content-Type': 'application/json' },
-    });
+    var obj = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      login: login,
+      password: password
+    };
+    var js = JSON.stringify(obj);
 
-        const res = JSON.parse(await response.text());
-        setMessage(res.message);
-    } catch (e) {
-        console.error(e);
-        setMessage('Signup failed please try again later');
+    try
+    {    
+        const response = await fetch('http://localhost:5001/api/signup',
+            {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+        var res = JSON.parse(await response.text());
+
+        if( res.id <= 0 )
+        {
+            setMessage('Signup failed: ' + res.error);
+        }
+        else
+        {
+            setMessage('Account created! Please check your email to verify your account before logging in.');
+            // Clear form
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setLogin('');
+            setPassword('');
+        }
     }
-    }
-    function doLogin(event: any): void {
-        event.preventDefault();
-        navigate('/login');
-    }
-    
+    catch(error:any)
+    {
+        setMessage(error.toString());
+    }    
+  }
 
-    return (
-        <div id="signupdiv">
-        <h2>Sign Up to Start Shopping</h2>
-        <input type="text" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} />
-        <input type="text" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} />
-        <input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-        <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-        <input
-        placeholder="Password"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}/>
-        <br />
-        <input type="submit" id="SignUpButton" className="buttons" value = "Sign Up" onClick={doSignup} />
-        <p>{message}</p>
+  function handleFirstNameChange( e: any ) : void
+  {
+    setFirstName( e.target.value );
+  }
 
-        <span id="loginLink"> Already have an Account? </span> <br/>
-        <input type="submit" className="buttons" value="Log In" onClick={doLogin} />
-        
-    </div>
+  function handleLastNameChange( e: any ) : void
+  {
+    setLastName( e.target.value );
+  }
+
+  function handleEmailChange( e: any ) : void
+  {
+    setEmail( e.target.value );
+  }
+
+  function handleLoginChange( e: any ) : void
+  {
+    setLogin( e.target.value );
+  }
+
+  function handlePasswordChange( e: any ) : void
+  {
+    setPassword( e.target.value );
+  }
+
+    return(
+      <div id="signupDiv">
+        <span id="inner-title">CREATE ACCOUNT</span><br />
+        <input type="text" id="firstName" placeholder="First Name" 
+          value={firstName} onChange={handleFirstNameChange} /><br />
+        <input type="text" id="lastName" placeholder="Last Name" 
+          value={lastName} onChange={handleLastNameChange} /><br />
+        <input type="email" id="email" placeholder="Email" 
+          value={email} onChange={handleEmailChange} /><br />
+        <input type="text" id="login" placeholder="Username" 
+          value={login} onChange={handleLoginChange} /><br />
+        <input type="password" id="password" placeholder="Password" 
+          value={password} onChange={handlePasswordChange} /><br />
+        <input type="submit" id="signupButton" className="buttons" value = "Sign Up"
+          onClick={doSignup} />
+        <span id="signupResult">{message}</span>
+     </div>
     );
-}
+};
 
 export default Signup;

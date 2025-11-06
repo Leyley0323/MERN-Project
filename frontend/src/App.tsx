@@ -9,6 +9,10 @@ import SignUp from './components/SignUp.tsx';
 import SignUpPage from './pages/SignUpPage';
 import ShoppingList from './pages/ShoppingList';
 import CheckoutPage from './pages/Checkout.tsx';
+import SignupPage from './pages/SignupPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -20,7 +24,10 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/SignUp.tsx" element={<SignUp />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/shoppinglist" element={<ShoppingList />} />
         <Route path="/checkout" element={<CheckoutPage />} />
       </Routes>  

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Builds / Caches
+dist/
+build/
+.parcel-cache/
+.cache/
+coverage/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / Editor files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Misc
+*.local
+debug/
+tmp/
+

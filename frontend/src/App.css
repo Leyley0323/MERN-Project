@@ -88,9 +88,45 @@
   color: green;
 }
 
-#cardList {
+#signupDiv, #verifyDiv, #forgotPasswordDiv, #resetPasswordDiv {
+  margin: 20px auto;
+  width: 300px;
+  text-align: left;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#signupDiv input[type="text"],
+#signupDiv input[type="email"],
+#signupDiv input[type="password"],
+#resetPasswordDiv input[type="password"],
+#forgotPasswordDiv input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
+
+#signupResult, #resetResult {
+  display: block;
   margin-top: 10px;
-  font-weight: bold;
+  color: red;
+}
+
+#signupResult.success {
+  color: green;
+}
+
+#verifyDiv p {
+  margin: 15px 0;
+  color: #333;
+}
+
+#forgotPasswordDiv p {
+  margin: 10px 0;
+  color: #666;
+  font-size: 14px;
 }
 
 .logo {

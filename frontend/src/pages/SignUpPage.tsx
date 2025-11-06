@@ -1,15 +1,15 @@
-import React from 'react';
-import logo from "../assets/logo.png";
-import SignUp from '../components/SignUp.tsx';
+import PageTitle from '../components/PageTitle.tsx';
+import Signup from '../components/Signup.tsx';
 
-function SignUpPage() {
-        return (
-        <div>
-        {/* SVG image */}
-        <img src={logo} alt="Cheap Cart Logo" width="100" height="100" />
-        <SignUp />
-        </div>
+const SignupPage = () =>
+{
+
+    return(
+      <div>
+        <PageTitle />
+        <Signup />
+      </div>
     );
-}
+};
 
-export default SignUpPage;
+export default SignupPage;
