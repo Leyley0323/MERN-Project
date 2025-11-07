@@ -30,13 +30,25 @@ function VerifyEmail()
         const response = await fetch('http://localhost:5001/api/verify-email',
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-        var res = JSON.parse(await response.text());
+        const responseText = await response.text();
+        var res = JSON.parse(responseText);
 
-        if( res.error.length > 0 )
+        // Check if there's an actual error message
+        if( res.error && typeof res.error === 'string' && res.error.trim().length > 0 )
         {
             setMessage('Verification failed: ' + res.error);
             setStatus('error');
         }
+        // Check if email is already verified (token was already used)
+        else if( res.alreadyVerified === true )
+        {
+            setMessage('Email is already verified! You can log in.');
+            setStatus('success');
+            setTimeout(() => {
+              navigate('/login');
+            }, 2000);
+        }
+        // Successful verification
         else
         {
             setMessage('Email verified successfully! You can now log in.');
@@ -48,7 +60,8 @@ function VerifyEmail()
     }
     catch(error:any)
     {
-        setMessage('Error: ' + error.toString());
+        console.error('Verification error:', error);
+        setMessage('Error connecting to server. Please try again later.');
         setStatus('error');
     }    
   }
