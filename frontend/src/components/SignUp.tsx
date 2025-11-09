@@ -13,6 +13,13 @@ function Signup()
   async function doSignup(event:any) : Promise<void>
   {
     event.preventDefault();
+    setMessage(''); // Clear previous messages
+
+    // Validate input
+    if (!firstName || !lastName || !email || !login || !password) {
+      setMessage('Please fill in all fields');
+      return;
+    }
 
     var obj = {
       firstName: firstName,
@@ -28,11 +35,25 @@ function Signup()
         const response = await fetch(`${API_URL}/api/signup`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-        var res = JSON.parse(await response.text());
+        // Check if response is OK
+        if (!response.ok) {
+          // Try to parse error response
+          try {
+            const errorText = await response.text();
+            const errorRes = JSON.parse(errorText);
+            setMessage('Signup failed: ' + (errorRes.error || `Server error (${response.status})`));
+          } catch {
+            setMessage(`Signup failed: Server error (${response.status} ${response.statusText})`);
+          }
+          return;
+        }
+
+        const responseText = await response.text();
+        var res = JSON.parse(responseText);
 
         if( res.id <= 0 )
         {
-            setMessage('Signup failed: ' + res.error);
+            setMessage('Signup failed: ' + (res.error || 'Unknown error'));
         }
         else
         {
@@ -47,7 +68,8 @@ function Signup()
     }
     catch(error:any)
     {
-        setMessage(error.toString());
+        console.error('Signup error:', error);
+        setMessage('Signup failed: ' + (error.message || error.toString() || 'Network error. Please check your connection.'));
     }    
   }
 

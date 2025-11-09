@@ -94,16 +94,23 @@ app.post('/api/signup', async (req, res, next) =>
     await user.save();
     console.log('[/api/signup] created user', user._id.toString());
 
-    // Send verification email
+    // Send verification email (non-blocking - fire and forget)
+    // Don't wait for email to be sent before responding to user
     console.log('[/api/signup] sending verification to', email);
-    const emailSent = await sendVerificationEmail(email, verificationToken, firstName);
-    if (!emailSent) {
-      console.error('[/api/signup] failed to send verification email');
-      // Still return success - user is created, they can request resend
-    } else {
-      console.log('[/api/signup] verification email queued');
-    }
+    sendVerificationEmail(email, verificationToken, firstName)
+      .then((emailSent) => {
+        if (emailSent) {
+          console.log('[/api/signup] verification email sent successfully');
+        } else {
+          console.error('[/api/signup] failed to send verification email (user can request resend)');
+        }
+      })
+      .catch((error) => {
+        console.error('[/api/signup] error sending verification email:', error);
+        // Don't fail signup if email fails - user is created, they can request resend
+      });
 
+    // Return success immediately - user is created
     var ret = { id: user._id.toString(), error: '' };
     res.status(200).json(ret);
   }
