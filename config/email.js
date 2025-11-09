@@ -60,6 +60,10 @@ const sendVerificationEmail = async (email, token, firstName) => {
     const verificationUrl = `${frontendUrl}/verify-email?token=${token}`;
     const senderEmail = process.env.SENDER_EMAIL || process.env.EMAIL_USER;
     
+    // Log the verification URL for debugging
+    console.log(`[sendVerificationEmail] Using FRONTEND_URL: ${frontendUrl}`);
+    console.log(`[sendVerificationEmail] Verification URL: ${verificationUrl}`);
+    
     if (!senderEmail) {
       console.error('Cannot send verification email: SENDER_EMAIL or EMAIL_USER not set');
       return false;
