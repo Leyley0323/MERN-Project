@@ -1,9 +1,11 @@
+/* Root styles - full width for all pages */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 #title {
@@ -11,29 +13,9 @@
   margin: 20px 0;
 }
 
-#loginDiv {
-  margin: 20px auto;
-  width: 300px;
-  text-align: left;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-#inner-title {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-#loginDiv input[type="text"],
-#loginDiv input[type="password"] {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  box-sizing: border-box;
-}
-
-#loginDiv input[type="submit"],
+/* Auth page styles are in AuthPage.css */
+/* Button styles are also in AuthPage.css for auth pages */
+/* Keeping .buttons here for backwards compatibility with other components */
 .buttons {
   background-color: #0d6b0d;
   color: white;
@@ -42,23 +24,19 @@
   cursor: pointer;
   border-radius: 4px;
   margin-top: 10px;
+  transition: all 0.3s ease;
 }
 
 .buttons:hover{
-  background-color: #0d6b0d;
-  color: #09350b;
-  opacity: .6;
+  background-color: #0a550a;
   transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .buttons:active{
-  transform: translateY(-1px);
+  transform: translateY(0);
 }
 
-#loginResult {
-  display: block;
-  margin-top: 10px;
-  color: red;
-}
+/* Auth result styles moved to AuthPage.css */
 
 #loggedInDiv {
   margin: 20px 0;
@@ -84,46 +62,11 @@
 
 /* Card-related styles removed - not needed for SharedCart */
 
-#signupDiv, #verifyDiv, #forgotPasswordDiv, #resetPasswordDiv {
-  margin: 20px auto;
-  width: 300px;
-  text-align: left;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+/* Auth page styles moved to AuthPage.css */
 
-#signupDiv input[type="text"],
-#signupDiv input[type="email"],
-#signupDiv input[type="password"],
-#resetPasswordDiv input[type="password"],
-#forgotPasswordDiv input[type="email"] {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  box-sizing: border-box;
-}
+/* Auth input styles moved to AuthPage.css */
 
-#signupResult, #resetResult {
-  display: block;
-  margin-top: 10px;
-  color: red;
-}
-
-#signupResult.success {
-  color: green;
-}
-
-#verifyDiv p {
-  margin: 15px 0;
-  color: #333;
-}
-
-#forgotPasswordDiv p {
-  margin: 10px 0;
-  color: #666;
-  font-size: 14px;
-}
+/* Auth result styles moved to AuthPage.css */
 
 .logo {
   height: 6em;
@@ -161,22 +104,4 @@
   color: #888;
 }
 
-#signupdiv{
-  margin: 20px auto;
-  width: 300px;
-  text-align: left;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-
-#signupdiv input[type="submit"], .buttons {
-  background-color: #0d6b0d;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-top: 10px;
-}
+/* Auth page styles moved to AuthPage.css */
