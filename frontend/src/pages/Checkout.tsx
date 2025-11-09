@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ShopListUI/continueShopping";
 import OrderSummary from "../components/CheckoutUI/OrderSummary";
@@ -36,8 +36,6 @@ export default function CheckoutPage() {
   }, []);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
 
   const handlePlaceOrder = () => {
     // TODO: Replace with your order submission (API call)

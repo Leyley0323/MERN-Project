@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 function VerifyEmail()
 {
@@ -27,7 +28,7 @@ function VerifyEmail()
 
     try
     {    
-        const response = await fetch('http://localhost:5001/api/verify-email',
+        const response = await fetch(`${API_URL}/api/verify-email`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
         const responseText = await response.text();

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../App.css';
+import { API_URL } from '../config/api';
 
 function Login()
 {
@@ -19,7 +20,7 @@ function Login()
 
     try
     {    
-        const response = await fetch('http://localhost:5001/api/login',
+        const response = await fetch(`${API_URL}/api/login`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
         var res = JSON.parse(await response.text());
@@ -56,7 +57,7 @@ function Login()
       return;
     }
     try {
-      const res = await fetch('http://localhost:5001/api/resend-verification', {
+      const res = await fetch(`${API_URL}/api/resend-verification`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: loginName })

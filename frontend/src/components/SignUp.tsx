@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_URL } from '../config/api';
 
 function Signup()
 {
@@ -24,7 +25,7 @@ function Signup()
 
     try
     {    
-        const response = await fetch('http://localhost:5001/api/signup',
+        const response = await fetch(`${API_URL}/api/signup`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
         var res = JSON.parse(await response.text());

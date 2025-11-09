@@ -1,5 +1,5 @@
 import PageTitle from '../components/PageTitle.tsx';
-import Signup from '../components/Signup.tsx';
+import SignUp from '../components/SignUp.tsx';
 
 const SignupPage = () =>
 {
@@ -7,7 +7,7 @@ const SignupPage = () =>
     return(
       <div>
         <PageTitle />
-        <Signup />
+        <SignUp />
       </div>
     );
 };

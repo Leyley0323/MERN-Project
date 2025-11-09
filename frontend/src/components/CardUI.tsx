@@ -1,12 +1,11 @@
 import React from 'react';
+import { API_URL } from '../config/api';
 
 function CardUI()
 {
     let _ud : any = localStorage.getItem('user_data');
     let ud = _ud ? JSON.parse( _ud ) : null;
     let userId : string = ud ? ud.id : '';
-    let firstName : string = ud ? ud.firstName : '';
-    let lastName : string = ud ? ud.lastName : '';
     
     const [message,setMessage] = React.useState('');
     const [searchResults,setResults] = React.useState('');
@@ -23,7 +22,7 @@ function CardUI()
 
         try
         {
-            const response = await fetch('http://localhost:5001/api/addcard',
+            const response = await fetch(`${API_URL}/api/addcard`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             let txt = await response.text();
@@ -53,7 +52,7 @@ function CardUI()
 
         try
         {
-            const response = await fetch('http://localhost:5001/api/searchcards',
+            const response = await fetch(`${API_URL}/api/searchcards`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             let txt = await response.text();

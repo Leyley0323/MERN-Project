@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_URL } from '../config/api';
 
 function ForgotPassword()
 {
@@ -14,7 +15,7 @@ function ForgotPassword()
 
     try
     {    
-        const response = await fetch('http://localhost:5001/api/reset-password-request',
+        const response = await fetch(`${API_URL}/api/reset-password-request`,
             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
         var res = JSON.parse(await response.text());

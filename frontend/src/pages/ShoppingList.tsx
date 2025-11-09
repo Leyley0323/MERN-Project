@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {Button} from '../components/ShopListUI/continueShopping';
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 
 type CartItem = {
