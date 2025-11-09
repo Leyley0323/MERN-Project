@@ -56,7 +56,8 @@ const sendVerificationEmail = async (email, token, firstName) => {
       return false;
     }
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // Remove trailing slash from FRONTEND_URL if present
+    const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
     const verificationUrl = `${frontendUrl}/verify-email?token=${token}`;
     const senderEmail = process.env.SENDER_EMAIL || process.env.EMAIL_USER;
     
@@ -146,7 +147,8 @@ const sendPasswordResetEmail = async (email, token, firstName) => {
       return false;
     }
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // Remove trailing slash from FRONTEND_URL if present
+    const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
     const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
     const senderEmail = process.env.SENDER_EMAIL || process.env.EMAIL_USER;
     
