@@ -82,11 +82,7 @@
   box-sizing: border-box;
 }
 
-#cardSearchResult, #cardAddResult {
-  display: block;
-  margin-top: 10px;
-  color: green;
-}
+/* Card-related styles removed - not needed for SharedCart */
 
 #signupDiv, #verifyDiv, #forgotPasswordDiv, #resetPasswordDiv {
   margin: 20px auto;

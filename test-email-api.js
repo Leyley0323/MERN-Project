@@ -37,9 +37,9 @@ const msg = {
   to: process.env.SENDER_EMAIL, // Send to yourself for testing
   from: {
     email: process.env.SENDER_EMAIL,
-    name: 'Cards App'
+    name: 'SharedCart'
   },
-  subject: 'Test Email from Cards App (API)',
+  subject: 'Test Email from SharedCart (API)',
   text: 'This is a test email sent via SendGrid API. If you receive this, your configuration is working!',
   html: '<p>This is a test email sent via SendGrid API. If you receive this, your configuration is working!</p>'
 };

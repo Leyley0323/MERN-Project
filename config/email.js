@@ -77,12 +77,12 @@ const sendVerificationEmail = async (email, token, firstName) => {
     }
     
     const mailOptions = {
-      from: `"Cards App" <${senderEmail}>`,
+      from: `"SharedCart" <${senderEmail}>`,
       to: email,
       subject: 'Verify Your Email Address',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Welcome to Cards App!</h2>
+          <h2>Welcome to SharedCart!</h2>
           <p>Hi ${firstName},</p>
           <p>Thank you for signing up. Please verify your email address by clicking the link below:</p>
           <p style="text-align: center; margin: 30px 0;">
@@ -96,7 +96,7 @@ const sendVerificationEmail = async (email, token, firstName) => {
           <p>This link will expire in 24 hours.</p>
           <p>If you didn't create an account, please ignore this email.</p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-          <p style="color: #999; font-size: 12px;">© Cards App</p>
+          <p style="color: #999; font-size: 12px;">© SharedCart</p>
         </div>
       `,
     };
@@ -158,7 +158,7 @@ const sendPasswordResetEmail = async (email, token, firstName) => {
     }
     
     const mailOptions = {
-      from: `"Cards App" <${senderEmail}>`,
+      from: `"SharedCart" <${senderEmail}>`,
       to: email,
       subject: 'Password Reset Request',
       html: `
@@ -177,7 +177,7 @@ const sendPasswordResetEmail = async (email, token, firstName) => {
           <p>This link will expire in 1 hour.</p>
           <p>If you didn't request a password reset, please ignore this email.</p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-          <p style="color: #999; font-size: 12px;">© Cards App</p>
+          <p style="color: #999; font-size: 12px;">© SharedCart</p>
         </div>
       `,
     };

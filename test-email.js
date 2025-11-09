@@ -83,9 +83,9 @@ transporter.verify(function (error, success) {
     // Try sending test email
     console.log('Attempting to send test email...');
     const mailOptions = {
-      from: `"Cards App" <${process.env.SENDER_EMAIL}>`,
+      from: `"SharedCart" <${process.env.SENDER_EMAIL}>`,
       to: process.env.SENDER_EMAIL, // Send to yourself for testing
-      subject: 'Test Email from Cards App',
+      subject: 'Test Email from SharedCart',
       text: 'This is a test email. If you receive this, your SendGrid configuration is working!',
       html: '<p>This is a test email. If you receive this, your SendGrid configuration is working!</p>'
     };

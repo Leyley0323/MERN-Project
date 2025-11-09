@@ -86,38 +86,6 @@ export default function CartListPage() {
       </div>
 
 
-      <div
-        style={{
-          position: "fixed",
-          right: "24px",
-          bottom: "24px",
-          zIndex: 9999, 
-        }}
-      >
-        <Button
-          onClick={() => navigate("/checkout")}
-          style={{
-            backgroundColor: "#f7df05ff",
-            color: "#000000ff",
-            fontWeight: 600,
-            borderRadius: "8px",
-            padding: "10px 24px",
-            border: "none",
-            cursor: "pointer",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-            transition: "all 0.2s ease-in-out",
-          }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = "#03b320ff")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = "#f7df05ff")
-          }
-        >
-          Checkout
-        </Button>
-      </div>
-    {/*-------------------------------------------------------------------------------------*/}
 
       <div style={{ 
          maxWidth: "600px",
