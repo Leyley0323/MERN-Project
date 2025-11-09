@@ -7,7 +7,8 @@ const crypto = require('crypto');
 
 const connectDB = require('./config/database');
 const User = require('./models/User');
-const { sendVerificationEmail, sendPasswordResetEmail } = require('./config/email');
+// Use SendGrid API instead of SMTP to avoid firewall issues with port 587
+const { sendVerificationEmail, sendPasswordResetEmail } = require('./config/email-api');
 
 // Connect to MongoDB
 connectDB();
