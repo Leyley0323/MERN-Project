@@ -1,14 +1,30 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-console.log('Testing SendGrid Email Configuration...\n');
-console.log('SMTP_HOST:', process.env.SMTP_HOST);
-console.log('SMTP_PORT:', process.env.SMTP_PORT);
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('SENDER_EMAIL:', process.env.SENDER_EMAIL);
-console.log('EMAIL_PASSWORD exists:', !!process.env.EMAIL_PASSWORD);
-console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
+console.log('========================================');
+console.log('Testing SendGrid Email Configuration...');
+console.log('========================================\n');
+
+console.log('Environment Variables:');
+console.log('  SMTP_HOST:', process.env.SMTP_HOST || 'NOT SET (will use smtp.gmail.com)');
+console.log('  SMTP_PORT:', process.env.SMTP_PORT || 'NOT SET (will use 587)');
+console.log('  EMAIL_USER:', process.env.EMAIL_USER || 'NOT SET ❌');
+console.log('  SENDER_EMAIL:', process.env.SENDER_EMAIL || 'NOT SET ❌');
+console.log('  EMAIL_PASSWORD exists:', !!process.env.EMAIL_PASSWORD);
+console.log('  EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length || 0);
+console.log('  FRONTEND_URL:', process.env.FRONTEND_URL || 'NOT SET (will use localhost)');
 console.log('\n---\n');
+
+// Validate required variables
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+  console.error('❌ ERROR: EMAIL_USER or EMAIL_PASSWORD is missing!');
+  console.error('Please check your .env file.');
+  process.exit(1);
+}
+
+if (!process.env.SENDER_EMAIL) {
+  console.error('⚠️  WARNING: SENDER_EMAIL is not set. Using EMAIL_USER as sender.');
+}
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',

@@ -63,6 +63,12 @@ const sendVerificationEmail = async (email, token, firstName) => {
     // Log the verification URL for debugging
     console.log(`[sendVerificationEmail] Using FRONTEND_URL: ${frontendUrl}`);
     console.log(`[sendVerificationEmail] Verification URL: ${verificationUrl}`);
+    console.log(`[sendVerificationEmail] Sender: ${senderEmail}`);
+    console.log(`[sendVerificationEmail] Recipient: ${email}`);
+    console.log(`[sendVerificationEmail] SMTP Host: ${process.env.SMTP_HOST || 'smtp.gmail.com'}`);
+    console.log(`[sendVerificationEmail] SMTP Port: ${process.env.SMTP_PORT || '587'}`);
+    console.log(`[sendVerificationEmail] EMAIL_USER: ${process.env.EMAIL_USER || 'NOT SET'}`);
+    console.log(`[sendVerificationEmail] EMAIL_PASSWORD exists: ${!!process.env.EMAIL_PASSWORD}`);
     
     if (!senderEmail) {
       console.error('Cannot send verification email: SENDER_EMAIL or EMAIL_USER not set');
@@ -101,19 +107,32 @@ const sendVerificationEmail = async (email, token, firstName) => {
     );
 
     const info = await Promise.race([sendPromise, timeoutPromise]);
-    console.log('Verification email sent successfully to:', email);
+    console.log('✅ Verification email sent successfully to:', email);
     console.log('Message ID:', info.messageId);
+    console.log('Response:', info.response);
     return true;
   } catch (error) {
-    console.error('Error sending verification email:', error);
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode,
-      stack: error.stack
-    });
+    console.error('❌ ERROR sending verification email to:', email);
+    console.error('Error message:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Error command:', error.command);
+    console.error('Error response:', error.response);
+    console.error('Error responseCode:', error.responseCode);
+    
+    // Provide helpful error messages
+    if (error.responseCode === 550) {
+      console.error('⚠️  ERROR 550: Sender email not verified in SendGrid!');
+      console.error('Please verify your sender email in SendGrid Dashboard.');
+      console.error('SENDER_EMAIL:', process.env.SENDER_EMAIL);
+    } else if (error.responseCode === 535) {
+      console.error('⚠️  ERROR 535: Authentication failed!');
+      console.error('Please check your EMAIL_USER and EMAIL_PASSWORD in .env file.');
+    } else if (error.message === 'Email send timeout') {
+      console.error('⚠️  ERROR: Email send timeout (10 seconds)');
+      console.error('SendGrid might be slow or unreachable.');
+    }
+    
+    console.error('Full error stack:', error.stack);
     return false;
   }
 };

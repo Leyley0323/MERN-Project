@@ -96,17 +96,25 @@ app.post('/api/signup', async (req, res, next) =>
 
     // Send verification email (non-blocking - fire and forget)
     // Don't wait for email to be sent before responding to user
-    console.log('[/api/signup] sending verification to', email);
+    console.log('[/api/signup] Attempting to send verification email to:', email);
+    console.log('[/api/signup] FRONTEND_URL from env:', process.env.FRONTEND_URL || 'NOT SET (using localhost)');
+    
     sendVerificationEmail(email, verificationToken, firstName)
       .then((emailSent) => {
         if (emailSent) {
-          console.log('[/api/signup] verification email sent successfully');
+          console.log('✅ [/api/signup] Verification email sent successfully to:', email);
         } else {
-          console.error('[/api/signup] failed to send verification email (user can request resend)');
+          console.error('❌ [/api/signup] Failed to send verification email to:', email);
+          console.error('[/api/signup] User can request resend via /api/resend-verification endpoint');
         }
       })
       .catch((error) => {
-        console.error('[/api/signup] error sending verification email:', error);
+        console.error('❌ [/api/signup] Exception while sending verification email:', error);
+        console.error('[/api/signup] Error details:', {
+          message: error.message,
+          code: error.code,
+          stack: error.stack
+        });
         // Don't fail signup if email fails - user is created, they can request resend
       });
 
