@@ -7,9 +7,7 @@ A collaborative shopping list application built with the MERN stack that allows 
 ### .env
 After pulling the code, create a `.env` file in the `cards` folder (same level as `server.js`).
 
-**⚠️ IMPORTANT: Never commit your `.env` file to Git! It contains sensitive information.**
-
-Create `.env` with the following variables:
+Create `.env` with the following variables:(I can send you the actual variables on Discord)
 
 ```bash
 # MongoDB Connection (get from MongoDB Atlas)
@@ -28,12 +26,6 @@ PORT=5001
 # This is the email address that will appear as "from" in emails (must be verified in SendGrid)
 SENDER_EMAIL=your_verified_email@example.com
 ```
-
-**How to get these values:**
-- **MONGODB_URI**: Get from MongoDB Atlas → Connect → Connection string
-- **EMAIL_PASSWORD**: Get from SendGrid → Settings → API Keys → Create API Key
-- **SENDER_EMAIL**: Use an email address you've verified in SendGrid
-- **FRONTEND_URL**: Use `http://localhost:5173` for local development, or your production URL
 
 ### Backend
 ```bash
