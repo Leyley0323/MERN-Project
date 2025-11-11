@@ -56,7 +56,7 @@ export default function ListDetailPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [filter, setFilter] = useState<'all' | 'unpurchased' | 'purchased'>('all');
   const navigate = useNavigate();
-  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Check if user is logged in
