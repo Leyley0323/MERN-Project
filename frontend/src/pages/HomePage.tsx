@@ -35,7 +35,7 @@ function HomePage() {
                 <span className="nav-link hi-user">
                   Hello, {user.firstName}!
                 </span>
-                <Link to="/shoppinglist" className="nav-link">
+                <Link to="/lists" className="nav-link">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -110,7 +110,7 @@ function HomePage() {
           )}
           {user && (
             <div className="hero-buttons">
-              <Link to="/shoppinglist" className="cta-button primary">
+              <Link to="/lists" className="cta-button primary">
                 View My Lists
               </Link>
             </div>
