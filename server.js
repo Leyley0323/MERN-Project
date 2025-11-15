@@ -616,6 +616,8 @@ app.get('/api/lists/:listId', verifyAuth, async (req, res) => {
           _id: item._id,
           name: item.name,
           quantity: item.quantity,
+          weight: item.weight,
+          weightUnit: item.weightUnit,
           purchased: item.purchased,
           purchasedBy: item.purchasedBy,
           purchasedAt: item.purchasedAt,
@@ -637,6 +639,97 @@ app.get('/api/lists/:listId', verifyAuth, async (req, res) => {
       success: false,
       data: null,
       error: error.message || 'Failed to fetch list'
+    });
+  }
+});
+
+// Update list name (members can update)
+app.put('/api/lists/:listId', verifyAuth, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { listId } = req.params;
+    const { name, description } = req.body;
+
+    // Find list and verify user is a member
+    const list = await ShoppingList.findById(listId);
+    if (!list) {
+      return res.status(404).json({
+        success: false,
+        data: null,
+        error: 'List not found'
+      });
+    }
+
+    const isMember = list.members.some(memberId => memberId.toString() === userId);
+    if (!isMember) {
+      return res.status(403).json({
+        success: false,
+        data: null,
+        error: 'You are not a member of this list'
+      });
+    }
+
+    // Validate and update name
+    if (name !== undefined) {
+      if (!name || name.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          data: null,
+          error: 'List name cannot be empty'
+        });
+      }
+      if (name.length > 100) {
+        return res.status(400).json({
+          success: false,
+          data: null,
+          error: 'List name must be 100 characters or less'
+        });
+      }
+      list.name = name.trim();
+    }
+
+    // Validate and update description
+    if (description !== undefined) {
+      if (description && description.length > 500) {
+        return res.status(400).json({
+          success: false,
+          data: null,
+          error: 'Description must be 500 characters or less'
+        });
+      }
+      list.description = description ? description.trim() : '';
+    }
+
+    // Update updatedAt
+    list.updatedAt = new Date();
+    await list.save();
+
+    // Populate creator and members
+    await list.populate('creatorId', 'firstName lastName');
+    await list.populate('members', 'firstName lastName');
+
+    res.status(200).json({
+      success: true,
+      data: {
+        _id: list._id,
+        name: list.name,
+        description: list.description,
+        code: list.code,
+        creatorId: list.creatorId,
+        creatorName: `${list.creatorId.firstName} ${list.creatorId.lastName}`,
+        members: list.members,
+        isCreator: list.creatorId._id.toString() === userId,
+        createdAt: list.createdAt,
+        updatedAt: list.updatedAt
+      },
+      error: ''
+    });
+  } catch (error) {
+    console.error('[/api/lists/:listId] PUT Error:', error);
+    res.status(500).json({
+      success: false,
+      data: null,
+      error: error.message || 'Failed to update list'
     });
   }
 });
@@ -716,7 +809,7 @@ app.post('/api/lists/:listId/items', verifyAuth, async (req, res) => {
   try {
     const userId = req.userId;
     const { listId } = req.params;
-    const { name, quantity } = req.body;
+    const { name, quantity, weight, weightUnit } = req.body;
 
     // Validate input
     if (!name || name.trim().length === 0) {
@@ -754,11 +847,35 @@ app.post('/api/lists/:listId/items', verifyAuth, async (req, res) => {
       });
     }
 
+    // Validate weight if provided
+    if (weight !== undefined && weight !== null) {
+      const weightNum = parseFloat(weight);
+      if (isNaN(weightNum) || weightNum < 0) {
+        return res.status(400).json({
+          success: false,
+          data: null,
+          error: 'Weight must be a positive number'
+        });
+      }
+    }
+
+    // Validate weightUnit if provided
+    const validUnits = ['lbs', 'kg', 'oz', 'g', 'lb'];
+    if (weightUnit && !validUnits.includes(weightUnit)) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        error: 'Invalid weight unit. Must be one of: lbs, kg, oz, g, lb'
+      });
+    }
+
     // Create item
     const item = new ListItem({
       listId: listId,
       name: name.trim(),
       quantity: quantity && quantity > 0 ? parseInt(quantity) : 1,
+      weight: weight !== undefined && weight !== null ? parseFloat(weight) : null,
+      weightUnit: weightUnit || null,
       addedBy: userId
     });
 
@@ -777,6 +894,8 @@ app.post('/api/lists/:listId/items', verifyAuth, async (req, res) => {
         _id: item._id,
         name: item.name,
         quantity: item.quantity,
+        weight: item.weight,
+        weightUnit: item.weightUnit,
         purchased: item.purchased,
         purchasedBy: item.purchasedBy,
         purchasedAt: item.purchasedAt,
@@ -797,12 +916,12 @@ app.post('/api/lists/:listId/items', verifyAuth, async (req, res) => {
   }
 });
 
-// Update item (name, quantity, purchased)
+// Update item (name, quantity, purchased, weight, weightUnit)
 app.put('/api/lists/:listId/items/:itemId', verifyAuth, async (req, res) => {
   try {
     const userId = req.userId;
     const { listId, itemId } = req.params;
-    const { name, quantity, purchased } = req.body;
+    const { name, quantity, purchased, weight, weightUnit } = req.body;
 
     // Find list and verify user is a member
     const list = await ShoppingList.findById(listId);
@@ -864,6 +983,47 @@ app.put('/api/lists/:listId/items/:itemId', verifyAuth, async (req, res) => {
       item.quantity = qty;
     }
 
+    if (weight !== undefined) {
+      if (weight === null || weight === '') {
+        item.weight = null;
+        item.weightUnit = null;
+      } else {
+        const weightNum = parseFloat(weight);
+        if (isNaN(weightNum) || weightNum < 0) {
+          return res.status(400).json({
+            success: false,
+            data: null,
+            error: 'Weight must be a positive number'
+          });
+        }
+        item.weight = weightNum;
+      }
+    }
+
+    if (weightUnit !== undefined) {
+      if (weightUnit === null || weightUnit === '') {
+        item.weightUnit = null;
+        // If weightUnit is cleared but weight exists, clear weight too
+        if (!item.weight) {
+          item.weight = null;
+        }
+      } else {
+        const validUnits = ['lbs', 'kg', 'oz', 'g', 'lb'];
+        if (!validUnits.includes(weightUnit)) {
+          return res.status(400).json({
+            success: false,
+            data: null,
+            error: 'Invalid weight unit. Must be one of: lbs, kg, oz, g, lb'
+          });
+        }
+        item.weightUnit = weightUnit;
+        // If weightUnit is set but weight is null, set weight to 0
+        if (item.weight === null) {
+          item.weight = 0;
+        }
+      }
+    }
+
     if (purchased !== undefined) {
       item.purchased = purchased === true;
       if (item.purchased) {
@@ -893,6 +1053,8 @@ app.put('/api/lists/:listId/items/:itemId', verifyAuth, async (req, res) => {
         _id: item._id,
         name: item.name,
         quantity: item.quantity,
+        weight: item.weight,
+        weightUnit: item.weightUnit,
         purchased: item.purchased,
         purchasedBy: item.purchasedBy,
         purchasedAt: item.purchasedAt,

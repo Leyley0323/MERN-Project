@@ -18,6 +18,16 @@ const listItemSchema = new mongoose.Schema({
     min: 1,
     max: 9999
   },
+  weight: {
+    type: Number,
+    default: null,
+    min: 0
+  },
+  weightUnit: {
+    type: String,
+    enum: ['lbs', 'kg', 'oz', 'g', 'lb'],
+    default: null
+  },
   purchased: {
     type: Boolean,
     default: false

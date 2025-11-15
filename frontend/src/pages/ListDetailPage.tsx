@@ -9,6 +9,8 @@ interface ListItem {
   _id: string;
   name: string;
   quantity: number;
+  weight?: number | null;
+  weightUnit?: string | null;
   purchased: boolean;
   purchasedBy?: {
     _id: string;
@@ -53,8 +55,13 @@ export default function ListDetailPage() {
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [editingQuantity, setEditingQuantity] = useState('');
+  const [editingWeight, setEditingWeight] = useState('');
+  const [editingWeightUnit, setEditingWeightUnit] = useState('');
+  const [editingListName, setEditingListName] = useState(false);
+  const [listNameValue, setListNameValue] = useState('');
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [filter, setFilter] = useState<'all' | 'unpurchased' | 'purchased'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const pollIntervalRef = useRef<number | null>(null);
 
@@ -104,6 +111,7 @@ export default function ListDetailPage() {
       }
 
       setList(data.data);
+      setListNameValue(data.data.name);
       setLastUpdated(new Date());
     } catch (err: any) {
       console.error('Error fetching list:', err);
@@ -125,13 +133,25 @@ export default function ListDetailPage() {
       setAddingItem(true);
       setError('');
 
+      const body: any = {
+        name: newItemName.trim(),
+        quantity: parseInt(newItemQuantity) || 1,
+      };
+
+      // Add weight if provided
+      const weightInputEl = document.getElementById('newItemWeight') as HTMLInputElement;
+      const weightUnitInputEl = document.getElementById('newItemWeightUnit') as HTMLSelectElement;
+      const weightValue = weightInputEl?.value;
+      const weightUnitValue = weightUnitInputEl?.value;
+      if (weightValue && weightValue.trim() && !isNaN(parseFloat(weightValue))) {
+        body.weight = parseFloat(weightValue);
+        body.weightUnit = weightUnitValue || 'lbs';
+      }
+
       const response = await fetch(`${API_URL}/api/lists/${listId}/items`, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({
-          name: newItemName.trim(),
-          quantity: parseInt(newItemQuantity) || 1,
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -142,6 +162,8 @@ export default function ListDetailPage() {
 
       setNewItemName('');
       setNewItemQuantity('1');
+      if (weightInputEl) weightInputEl.value = '';
+      if (weightUnitInputEl) weightUnitInputEl.value = 'lbs';
       fetchList(); // Refresh list
     } catch (err: any) {
       console.error('Error adding item:', err);
@@ -155,12 +177,16 @@ export default function ListDetailPage() {
     setEditingItemId(item._id);
     setEditingName(item.name);
     setEditingQuantity(item.quantity.toString());
+    setEditingWeight(item.weight !== null && item.weight !== undefined ? item.weight.toString() : '');
+    setEditingWeightUnit(item.weightUnit || 'lbs');
   };
 
   const handleCancelEdit = () => {
     setEditingItemId(null);
     setEditingName('');
     setEditingQuantity('');
+    setEditingWeight('');
+    setEditingWeightUnit('');
   };
 
   const handleSaveEdit = async (itemId: string) => {
@@ -169,13 +195,26 @@ export default function ListDetailPage() {
     try {
       setError('');
 
+      const body: any = {
+        name: editingName.trim(),
+        quantity: parseInt(editingQuantity) || 1,
+      };
+
+      // Add weight if provided (optional)
+      const weightValue = editingWeight.trim();
+      if (weightValue && !isNaN(parseFloat(weightValue)) && parseFloat(weightValue) > 0) {
+        body.weight = parseFloat(weightValue);
+        body.weightUnit = editingWeightUnit || 'lbs';
+      } else {
+        // Clear weight if field is empty
+        body.weight = null;
+        body.weightUnit = null;
+      }
+
       const response = await fetch(`${API_URL}/api/lists/${listId}/items/${itemId}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
-        body: JSON.stringify({
-          name: editingName.trim(),
-          quantity: parseInt(editingQuantity) || 1,
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -301,16 +340,64 @@ export default function ListDetailPage() {
     }
   };
 
+  const handleUpdateListName = async () => {
+    if (!listId || !listNameValue.trim()) {
+      setEditingListName(false);
+      setListNameValue(list?.name || '');
+      return;
+    }
+
+    try {
+      setError('');
+
+      const response = await fetch(`${API_URL}/api/lists/${listId}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          name: listNameValue.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to update list name');
+      }
+
+      setEditingListName(false);
+      fetchList(); // Refresh list
+    } catch (err: any) {
+      console.error('Error updating list name:', err);
+      setError(err.message || 'Failed to update list name. Please try again.');
+      setListNameValue(list?.name || '');
+    }
+  };
+
   const getFilteredItems = () => {
     if (!list) return [];
+    let items = list.items;
+    
+    // Apply filter
     switch (filter) {
       case 'unpurchased':
-        return list.items.filter(item => !item.purchased);
+        items = items.filter(item => !item.purchased);
+        break;
       case 'purchased':
-        return list.items.filter(item => item.purchased);
+        items = items.filter(item => item.purchased);
+        break;
       default:
-        return list.items;
+        break;
     }
+
+    // Apply search
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      items = items.filter(item => 
+        item.name.toLowerCase().includes(query)
+      );
+    }
+
+    return items;
   };
 
   const getTimeSinceUpdate = () => {
@@ -388,10 +475,98 @@ export default function ListDetailPage() {
           </button>
         </div>
 
-        <h2 style={{ color: '#f7df05ff', marginBottom: '10px' }}>{list.name}</h2>
-        {list.description && (
-          <p style={{ color: '#aaa', marginBottom: '20px' }}>{list.description}</p>
-        )}
+        {/* Editable List Name */}
+        <div style={{ marginBottom: '20px' }}>
+          {editingListName ? (
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <input
+                type="text"
+                value={listNameValue}
+                onChange={(e) => setListNameValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleUpdateListName();
+                  } else if (e.key === 'Escape') {
+                    setEditingListName(false);
+                    setListNameValue(list.name);
+                  }
+                }}
+                style={{
+                  flex: 1,
+                  minWidth: '200px',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  border: '2px solid #f7df05',
+                  backgroundColor: '#1a1a1a',
+                  color: '#fff',
+                  fontSize: '20px',
+                  fontWeight: '600',
+                  boxSizing: 'border-box',
+                }}
+                autoFocus
+              />
+              <button
+                onClick={handleUpdateListName}
+                style={{
+                  backgroundColor: '#03b320ff',
+                  color: '#000',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setEditingListName(false);
+                  setListNameValue(list.name);
+                }}
+                style={{
+                  backgroundColor: '#666',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <h2 
+                style={{ 
+                  color: '#f7df05ff', 
+                  marginBottom: '10px',
+                  cursor: 'pointer',
+                  display: 'inline-block',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  transition: 'background-color 0.2s'
+                }}
+                onClick={() => setEditingListName(true)}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(247, 223, 5, 0.1)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                title="Click to edit list name"
+              >
+                {list.name} ✏️
+              </h2>
+            </div>
+          )}
+          {list.description && (
+            <p style={{ color: '#aaa', marginBottom: '20px', marginTop: '0' }}>{list.description}</p>
+          )}
+        </div>
 
         <div style={{ 
           backgroundColor: '#1a1a1a', 
@@ -471,6 +646,35 @@ export default function ListDetailPage() {
           </div>
         )}
 
+        {/* Search Bar */}
+        <div style={{ marginBottom: '20px' }}>
+          <input
+            type="text"
+            placeholder="Search items..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              fontSize: '16px',
+              border: '2px solid #444',
+              borderRadius: '8px',
+              backgroundColor: '#1a1a1a',
+              color: '#fff',
+              boxSizing: 'border-box',
+              transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#f7df05';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(247, 223, 5, 0.1)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = '#444';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          />
+        </div>
+
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -481,6 +685,11 @@ export default function ListDetailPage() {
         }}>
           <div style={{ color: '#03b320ff', fontSize: '18px', fontWeight: '600' }}>
             {list.purchasedItems} of {list.totalItems} items purchased
+            {searchQuery && filteredItems.length !== list.items.length && (
+              <span style={{ color: '#aaa', fontSize: '14px', marginLeft: '10px' }}>
+                ({filteredItems.length} matching)
+              </span>
+            )}
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
@@ -592,6 +801,54 @@ export default function ListDetailPage() {
                 }}
               />
             </div>
+            <div style={{ width: '120px' }}>
+              <label style={{ display: 'block', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
+                Weight (Optional)
+              </label>
+              <input
+                id="newItemWeight"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="Optional"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  border: '2px solid #333',
+                  backgroundColor: '#1a1a1a',
+                  color: '#fff',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+            <div style={{ width: '80px' }}>
+              <label style={{ display: 'block', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
+                Unit
+              </label>
+              <select
+                id="newItemWeightUnit"
+                defaultValue="lbs"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: '6px',
+                  border: '2px solid #333',
+                  backgroundColor: '#1a1a1a',
+                  color: '#fff',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                  cursor: 'pointer',
+                }}
+              >
+                <option value="lbs">lbs</option>
+                <option value="kg">kg</option>
+                <option value="oz">oz</option>
+                <option value="g">g</option>
+                <option value="lb">lb</option>
+              </select>
+            </div>
             <button
               type="submit"
               disabled={addingItem || !newItemName.trim()}
@@ -619,11 +876,14 @@ export default function ListDetailPage() {
             color: '#aaa', 
             padding: '40px 20px',
             backgroundColor: '#1a1a1a',
-            borderRadius: '8px'
+            borderRadius: '8px',
+            border: '2px solid #333'
           }}>
-            {filter === 'all' 
-              ? 'No items in this list yet. Add one above!'
-              : `No ${filter} items.`
+            {searchQuery 
+              ? `No items found matching "${searchQuery}"`
+              : filter === 'all' 
+                ? 'No items in this list yet. Add one above!'
+                : `No ${filter} items.`
             }
           </div>
         ) : (
@@ -688,6 +948,43 @@ export default function ListDetailPage() {
                         fontSize: '16px',
                       }}
                     />
+                    <input
+                      type="number"
+                      value={editingWeight}
+                      onChange={(e) => setEditingWeight(e.target.value)}
+                      step="0.01"
+                      min="0"
+                      placeholder="Weight (optional)"
+                      style={{
+                        width: '120px',
+                        padding: '8px',
+                        borderRadius: '4px',
+                        border: '2px solid #03b320ff',
+                        backgroundColor: '#000',
+                        color: '#fff',
+                        fontSize: '16px',
+                      }}
+                    />
+                    <select
+                      value={editingWeightUnit}
+                      onChange={(e) => setEditingWeightUnit(e.target.value)}
+                      style={{
+                        width: '70px',
+                        padding: '8px',
+                        borderRadius: '4px',
+                        border: '2px solid #03b320ff',
+                        backgroundColor: '#000',
+                        color: '#fff',
+                        fontSize: '16px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <option value="lbs">lbs</option>
+                      <option value="kg">kg</option>
+                      <option value="oz">oz</option>
+                      <option value="g">g</option>
+                      <option value="lb">lb</option>
+                    </select>
                     <button
                       onClick={() => handleSaveEdit(item._id)}
                       style={{
@@ -728,6 +1025,11 @@ export default function ListDetailPage() {
                       }}>
                         <strong>{item.name}</strong>
                         <span style={{ color: '#aaa', marginLeft: '10px' }}>× {item.quantity}</span>
+                        {item.weight && item.weightUnit && (
+                          <span style={{ color: '#f7df05', marginLeft: '10px', fontSize: '14px' }}>
+                            ({item.weight} {item.weightUnit})
+                          </span>
+                        )}
                       </div>
                       <div style={{ color: '#888', fontSize: '12px' }}>
                         Added by {item.addedByName}

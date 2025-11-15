@@ -18,8 +18,10 @@ interface ShoppingList {
 
 export default function ListsPage() {
   const [lists, setLists] = useState<ShoppingList[]>([]);
+  const [filteredLists, setFilteredLists] = useState<ShoppingList[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +50,9 @@ export default function ListsPage() {
         throw new Error(data.error || 'Failed to fetch lists');
       }
 
-      setLists(data.data || []);
+      const fetchedLists = data.data || [];
+      setLists(fetchedLists);
+      setFilteredLists(fetchedLists);
     } catch (err: any) {
       console.error('Error fetching lists:', err);
       setError(err.message || 'Failed to load lists. Please try again.');
@@ -56,6 +60,23 @@ export default function ListsPage() {
       setLoading(false);
     }
   };
+
+  // Filter lists based on search query
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredLists(lists);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = lists.filter(list => 
+      list.name.toLowerCase().includes(query) ||
+      list.description.toLowerCase().includes(query) ||
+      list.code.toLowerCase().includes(query) ||
+      list.creatorName.toLowerCase().includes(query)
+    );
+    setFilteredLists(filtered);
+  }, [searchQuery, lists]);
 
   const handleViewList = (listId: string) => {
     navigate(`/lists/${listId}`);
@@ -86,9 +107,56 @@ export default function ListsPage() {
     <div className="auth-page">
       <div className="auth-container" style={{ maxWidth: '800px' }}>
         <PageTitle />
+        
+        <div style={{ marginBottom: '20px' }}>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              backgroundColor: '#666',
+              color: '#fff',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+            }}
+          >
+            ← Back to Home
+          </button>
+        </div>
+
         <h2 style={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
           My Shopping Lists
         </h2>
+
+        {/* Search Bar */}
+        <div style={{ marginBottom: '25px' }}>
+          <input
+            type="text"
+            placeholder="Search lists by name, description, code, or creator..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              fontSize: '16px',
+              border: '2px solid #444',
+              borderRadius: '8px',
+              backgroundColor: '#1a1a1a',
+              color: '#fff',
+              boxSizing: 'border-box',
+              transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#f7df05';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(247, 223, 5, 0.1)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = '#444';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          />
+        </div>
 
         {error && (
           <div style={{ 
@@ -152,7 +220,8 @@ export default function ListsPage() {
             color: '#fff', 
             padding: '40px 20px',
             backgroundColor: '#1a1a1a',
-            borderRadius: '8px'
+            borderRadius: '8px',
+            border: '2px solid #333'
           }}>
             <p style={{ fontSize: '18px', marginBottom: '10px' }}>
               You don't have any lists yet.
@@ -161,13 +230,29 @@ export default function ListsPage() {
               Create a new list or join an existing one to get started!
             </p>
           </div>
+        ) : filteredLists.length === 0 ? (
+          <div style={{ 
+            textAlign: 'center', 
+            color: '#fff', 
+            padding: '40px 20px',
+            backgroundColor: '#1a1a1a',
+            borderRadius: '8px',
+            border: '2px solid #333'
+          }}>
+            <p style={{ fontSize: '18px', marginBottom: '10px' }}>
+              No lists found matching "{searchQuery}"
+            </p>
+            <p style={{ fontSize: '14px', color: '#aaa' }}>
+              Try a different search term
+            </p>
+          </div>
         ) : (
           <div style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
             gap: '20px' 
           }}>
-            {lists.map((list) => (
+            {filteredLists.map((list) => (
               <div
                 key={list._id}
                 onClick={() => handleViewList(list._id)}
@@ -182,10 +267,12 @@ export default function ListsPage() {
                 onMouseOver={(e) => {
                   e.currentTarget.style.borderColor = '#03b320ff';
                   e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(3, 179, 32, 0.3)';
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.borderColor = '#333';
                   e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
                 <h3 style={{ 

@@ -52,6 +52,24 @@ export default function JoinListPage() {
     <div className="auth-page">
       <div className="auth-container" style={{ maxWidth: '500px' }}>
         <PageTitle />
+        
+        <div style={{ marginBottom: '20px' }}>
+          <button
+            onClick={() => navigate('/lists')}
+            style={{
+              backgroundColor: '#666',
+              color: '#fff',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+            }}
+          >
+            ← Back to Lists
+          </button>
+        </div>
+
         <h2 style={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
           Join Shopping List
         </h2>
