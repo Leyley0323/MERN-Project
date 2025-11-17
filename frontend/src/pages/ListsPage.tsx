@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config/api';
 import { getAuthHeaders, isLoggedIn } from '../utils/auth';
-import PageTitle from '../components/PageTitle';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import '../AuthPage.css';
 
 interface ShoppingList {
@@ -92,21 +93,25 @@ export default function ListsPage() {
 
   if (loading) {
     return (
-      <div className="auth-page">
-        <div className="auth-container">
-          <PageTitle />
-          <div style={{ textAlign: 'center', color: '#fff', padding: '20px' }}>
-            Loading your lists...
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <div className="auth-page" style={{ flex: 1 }}>
+          <div className="auth-container">
+            <div style={{ textAlign: 'center', color: '#fff', padding: '20px' }}>
+              Loading your lists...
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-container" style={{ maxWidth: '800px' }}>
-        <PageTitle />
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header />
+      <div className="auth-page" style={{ flex: 1 }}>
+        <div className="auth-container" style={{ maxWidth: '800px' }}>
         
         <div style={{ marginBottom: '20px' }}>
           <button
@@ -313,7 +318,9 @@ export default function ListsPage() {
             ))}
           </div>
         )}
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }

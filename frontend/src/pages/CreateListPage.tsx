@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../config/api';
 import { getAuthHeaders, isLoggedIn } from '../utils/auth';
-import PageTitle from '../components/PageTitle';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import '../AuthPage.css';
 
 export default function CreateListPage() {
@@ -50,11 +51,11 @@ export default function CreateListPage() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-container" style={{ maxWidth: '500px' }}>
-        <PageTitle />
-        
-        <div style={{ marginBottom: '20px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header />
+      <div className="auth-page" style={{ flex: 1 }}>
+        <div className="auth-container" style={{ maxWidth: '500px' }}>
+          <div style={{ marginBottom: '20px' }}>
           <button
             onClick={() => navigate('/lists')}
             style={{
@@ -191,7 +192,9 @@ export default function CreateListPage() {
             </button>
           </div>
         </form>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }

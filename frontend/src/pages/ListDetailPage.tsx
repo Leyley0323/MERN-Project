@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_URL } from '../config/api';
 import { getAuthHeaders, isLoggedIn } from '../utils/auth';
-import PageTitle from '../components/PageTitle';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import '../AuthPage.css';
 
 interface ListItem {
@@ -412,41 +413,47 @@ export default function ListDetailPage() {
 
   if (loading && !list) {
     return (
-      <div className="auth-page">
-        <div className="auth-container">
-          <PageTitle />
-          <div style={{ textAlign: 'center', color: '#fff', padding: '20px' }}>
-            Loading list...
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <div className="auth-page" style={{ flex: 1 }}>
+          <div className="auth-container">
+            <div style={{ textAlign: 'center', color: '#fff', padding: '20px' }}>
+              Loading list...
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (!list) {
     return (
-      <div className="auth-page">
-        <div className="auth-container">
-          <PageTitle />
-          <div style={{ textAlign: 'center', color: '#ff4444', padding: '20px' }}>
-            {error || 'List not found'}
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <div className="auth-page" style={{ flex: 1 }}>
+          <div className="auth-container">
+            <div style={{ textAlign: 'center', color: '#ff4444', padding: '20px' }}>
+              {error || 'List not found'}
+            </div>
+            <button
+              onClick={() => navigate('/lists')}
+              style={{
+                backgroundColor: '#f7df05ff',
+                color: '#000',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                margin: '20px auto',
+                display: 'block',
+              }}
+            >
+              Back to Lists
+            </button>
           </div>
-          <button
-            onClick={() => navigate('/lists')}
-            style={{
-              backgroundColor: '#f7df05ff',
-              color: '#000',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              margin: '20px auto',
-              display: 'block',
-            }}
-          >
-            Back to Lists
-          </button>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -454,9 +461,10 @@ export default function ListDetailPage() {
   const filteredItems = getFilteredItems();
 
   return (
-    <div className="auth-page">
-      <div className="auth-container" style={{ maxWidth: '800px' }}>
-        <PageTitle />
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header />
+      <div className="auth-page" style={{ flex: 1 }}>
+        <div className="auth-container" style={{ maxWidth: '800px' }}>
         
         <div style={{ marginBottom: '20px' }}>
           <button
@@ -1066,7 +1074,9 @@ export default function ListDetailPage() {
             ))}
           </ul>
         )}
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }

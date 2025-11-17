@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/SharedCartLogo.png";
 import "../HomePage.css";
-import { Link } from "react-router-dom";
 
 function HomePage() {
   const [user, setUser] = useState<{ firstName: string } | null>(null);
+  const navigate = useNavigate();
 
   //for displaying user's name after they log in
   useEffect(() => {
@@ -21,13 +23,35 @@ function HomePage() {
     window.location.href = '/';
   }
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <div className="home">
       {/* Header */}
       <header className="header">
         <div className="header-inner">
-          <div className="logo-container">
-            <h1 className="logo-text">SharedCart</h1>
+          <div className="logo-container" style={{ cursor: 'pointer' }} onClick={handleLogoClick}>
+            <img 
+              src={logo} 
+              alt="SharedCart Logo" 
+              width="50" 
+              height="50" 
+              style={{ 
+                marginRight: '12px',
+                transition: 'transform 0.2s ease, opacity 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.opacity = '0.9';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.opacity = '1';
+              }}
+            />
+            <h1 className="logo-text" style={{ margin: 0 }}>SharedCart</h1>
           </div>
           <nav className="nav">
             {user ? (
