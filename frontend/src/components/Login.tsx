@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../App.css';
 import { API_URL } from '../config/api';
 
@@ -9,7 +9,6 @@ function Login()
   const [showResend,setShowResend] = React.useState(false);
   const [loginName,setLoginName] = React.useState('');
   const [loginPassword,setPassword] = React.useState('');
-  const navigate = useNavigate();
 
   async function doLogin(event:any) : Promise<void>
   {
@@ -83,35 +82,136 @@ function Login()
     setPassword( e.target.value );
   }
 
-    function doSignUp(event: any): void {
-      event.preventDefault();
-      navigate('/signup');
-    }
+    const isSuccess = message && (message.includes('resent') || message.includes('Verification email'));
 
     return(
       <div id="loginDiv">
-        <span id="inner-title">Sign in to Start Shoping</span><br />
-        <input type="text" id="loginName" placeholder="Username or Email" 
-          onChange={handleSetLoginName} /><br />
-        <input type="password" id="loginPassword" placeholder="Password" 
-          onChange={handleSetPassword} /><br />
-        <input type="submit" id="loginButton" className="buttons" value = "LOG IN"
-          onClick={doLogin} />
-      <span id="loginResult">{message}</span>
-      <br />
-      <Link to="/forgot-password" style={{fontSize: '14px', color: '#666', textDecoration: 'none'}}>
-        Forgot Password?
-      </Link>
-      {showResend && (
-        <>
-          <br />
-          <button className="buttons" style={{marginTop: '8px'}} onClick={resendVerification}>Resend Verification</button>
-        </>
-      )}
-      <br /><br />
-      <span id="signuptitle">Don't Have An Account? </span>
-      <input type="submit" id="CreateAccountButton" className="buttons" value = "CREATE ACCOUNT"
-          onClick={doSignUp} />
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <span id="inner-title">Welcome Back</span>
+          <p style={{ 
+            color: 'var(--text-subtle)', 
+            fontSize: '0.95rem', 
+            marginTop: '0.5rem',
+            marginBottom: 0 
+          }}>
+            Sign in to access your shopping lists
+          </p>
+        </div>
+
+        <div className="form-group">
+          <div className="input-wrapper">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="input-icon">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input 
+              type="text" 
+              id="loginName" 
+              placeholder="Username or Email" 
+              value={loginName}
+              onChange={handleSetLoginName}
+              className="form-input"
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="input-wrapper">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="input-icon">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              placeholder="Password" 
+              value={loginPassword}
+              onChange={handleSetPassword}
+              className="form-input"
+            />
+          </div>
+        </div>
+
+        {message && (
+          <div className={`message-box ${isSuccess ? 'success' : 'error'}`}>
+            {isSuccess ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px' }}>
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px' }}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            )}
+            <span id="loginResult">{message}</span>
+          </div>
+        )}
+
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '1rem',
+          flexWrap: 'wrap',
+          gap: '0.5rem'
+        }}>
+          <Link 
+            to="/forgot-password" 
+            style={{
+              fontSize: '0.9rem', 
+              color: 'var(--text-subtle)',
+              textDecoration: 'none',
+              transition: 'color 0.2s ease'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-subtle)'}
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
+        <input 
+          type="submit" 
+          id="loginButton" 
+          className="buttons" 
+          value="Sign In"
+          onClick={doLogin} 
+        />
+
+        {showResend && (
+          <button 
+            className="buttons" 
+            style={{
+              marginTop: '0.75rem',
+              background: 'rgba(3, 216, 127, 0.2)',
+              border: '1px solid rgba(3, 216, 127, 0.4)',
+              color: 'var(--accent)'
+            }}
+            onClick={resendVerification}
+          >
+            Resend Verification Email
+          </button>
+        )}
+
+        <div style={{ 
+          textAlign: 'center', 
+          marginTop: '1.5rem',
+          paddingTop: '1.5rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+        }}>
+          <span id="signuptitle">Don't have an account? </span>
+          <Link 
+            to="/signup" 
+            style={{ 
+              fontWeight: 600,
+              marginLeft: '4px'
+            }}
+          >
+            Create Account
+          </Link>
+        </div>
         
     </div>
     );

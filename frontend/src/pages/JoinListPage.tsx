@@ -5,6 +5,7 @@ import { getAuthHeaders, isLoggedIn } from '../utils/auth';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../AuthPage.css';
+import '../Dashboard.css';
 
 export default function JoinListPage() {
   const [code, setCode] = useState('');
@@ -50,130 +51,74 @@ export default function JoinListPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-page">
       <Header />
-      <div className="auth-page" style={{ flex: 1 }}>
-        <div className="auth-container" style={{ maxWidth: '500px' }}>
-          <div style={{ marginBottom: '20px' }}>
-          <button
-            onClick={() => navigate('/lists')}
-            style={{
-              backgroundColor: '#666',
-              color: '#fff',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-            }}
-          >
+      <main className="dashboard-page">
+        <div className="dashboard-shell">
+          <button className="back-link" onClick={() => navigate('/lists')}>
             ← Back to Lists
           </button>
-        </div>
 
-        <h2 style={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
-          Join Shopping List
-        </h2>
-
-        {error && (
-          <div style={{ 
-            color: '#ff4444', 
-            textAlign: 'center', 
-            marginBottom: '20px',
-            padding: '10px',
-            backgroundColor: '#330000',
-            borderRadius: '4px'
-          }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              color: '#fff', 
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              List Code *
-            </label>
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase())}
-              required
-              maxLength={8}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '6px',
-                border: '2px solid #333',
-                backgroundColor: '#1a1a1a',
-                color: '#fff',
-                fontSize: '20px',
-                letterSpacing: '4px',
-                textAlign: 'center',
-                textTransform: 'uppercase',
-                boxSizing: 'border-box',
-              }}
-              placeholder="ABC123"
-            />
-            <p style={{ 
-              color: '#aaa', 
-              fontSize: '14px', 
-              marginTop: '8px',
-              textAlign: 'center'
-            }}>
-              Enter the 6-8 character code shared by the list creator
+          <section className="dashboard-card">
+            <span className="section-eyebrow">Join</span>
+            <h2 className="section-title">Enter a share code</h2>
+            <p className="section-subtitle">
+              Paste the 6–8 character code you received to jump directly into a shared list.
             </p>
-          </div>
 
-          <div style={{ 
-            display: 'flex', 
-            gap: '10px', 
-            justifyContent: 'center',
-            marginTop: '30px'
-          }}>
-            <button
-              type="button"
-              onClick={handleCancel}
-              disabled={loading}
-              style={{
-                backgroundColor: '#666',
-                color: '#fff',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontWeight: '600',
-                fontSize: '16px',
-                opacity: loading ? 0.5 : 1,
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !code.trim()}
-              style={{
-                backgroundColor: '#f7df05ff',
-                color: '#000',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                cursor: loading || !code.trim() ? 'not-allowed' : 'pointer',
-                fontWeight: '600',
-                fontSize: '16px',
-                opacity: loading || !code.trim() ? 0.5 : 1,
-              }}
-            >
-              {loading ? 'Joining...' : 'Join List'}
-            </button>
-          </div>
-        </form>
+            {error && (
+              <div className="alert-card" style={{ marginTop: '1.25rem', color: 'var(--danger)' }}>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="form-grid" style={{ marginTop: '1.5rem' }}>
+              <div>
+                <label className="section-eyebrow" style={{ letterSpacing: '0.2em' }}>
+                  List code
+                </label>
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  required
+                  maxLength={8}
+                  className="input-field"
+                  style={{
+                    textAlign: 'center',
+                    letterSpacing: '0.6rem',
+                    textTransform: 'uppercase',
+                    fontSize: '1.4rem',
+                    fontWeight: 600,
+                  }}
+                  placeholder="ABC123"
+                />
+                <p style={{ color: 'var(--text-subtle)', textAlign: 'center', marginTop: '0.4rem' }}>
+                  Looks like: <strong>SHR123</strong> or <strong>GROCER1</strong>
+                </p>
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={loading}
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading || !code.trim()}
+                >
+                  {loading ? 'Joining…' : 'Join List'}
+                </button>
+              </div>
+            </form>
+          </section>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

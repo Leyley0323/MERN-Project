@@ -1,10 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/SharedCartLogo.png";
+import Footer from "../components/Footer";
+import { API_URL } from "../config/api";
 import "../HomePage.css";
+import SharedCartLogo from "../assets/SharedCartLogo.png";
+
+interface Stats {
+  users: number;
+  lists: number;
+  items: number;
+}
 
 function HomePage() {
   const [user, setUser] = useState<{ firstName: string } | null>(null);
+  const [stats, setStats] = useState<Stats>({ users: 0, lists: 0, items: 0 });
+  const [statsLoading, setStatsLoading] = useState(true);
   const navigate = useNavigate();
 
   //for displaying user's name after they log in
@@ -14,6 +24,46 @@ function HomePage() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  // Fetch stats from backend
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const response = await fetch(`${API_URL}/api/stats`);
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setStats(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        // Keep default values (0) on error
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+
+    // Fetch immediately on mount
+    fetchStats();
+
+    // Auto-refresh every 5 minutes 
+    const intervalId = setInterval(fetchStats, 15 * 60 * 1000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Format numbers nicely 
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    }
+    return num.toLocaleString();
+  };
 
   //for logging out user
   function handleLogout(e: React.MouseEvent<HTMLButtonElement>) {
@@ -34,21 +84,13 @@ function HomePage() {
         <div className="header-inner">
           <div className="logo-container" style={{ cursor: 'pointer' }} onClick={handleLogoClick}>
             <img 
-              src={logo} 
+              src={SharedCartLogo} 
               alt="SharedCart Logo" 
-              width="50" 
-              height="50" 
               style={{ 
-                marginRight: '12px',
-                transition: 'transform 0.2s ease, opacity 0.2s ease'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.opacity = '0.9';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.opacity = '1';
+                width: "56px", 
+                height: "56px", 
+                objectFit: "fill",
+                display: "block"
               }}
             />
             <h1 className="logo-text" style={{ margin: 0 }}>SharedCart</h1>
@@ -139,12 +181,35 @@ function HomePage() {
               </Link>
             </div>
           )}
+          <div className="hero-stats">
+            <div className="stat-card">
+              <span>Lists created</span>
+              <strong>
+                {statsLoading ? '...' : `${formatNumber(stats.lists)}+`}
+              </strong>
+            </div>
+            <div className="stat-card">
+              <span>Items added</span>
+              <strong>
+                {statsLoading ? '...' : formatNumber(stats.items)}
+              </strong>
+            </div>
+            <div className="stat-card">
+              <span>Groups syncing</span>
+              <strong>
+                {statsLoading ? '...' : formatNumber(stats.users)}
+              </strong>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="features-section">
         <h2 className="section-title">Why SharedCart?</h2>
+        <p className="section-subtitle">
+          A calm, modern workspace for households to stay in sync without juggling texts or sticky notes.
+        </p>
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon">📝</div>
@@ -172,6 +237,9 @@ function HomePage() {
       {/* How It Works Section */}
       <section className="how-it-works-section">
         <h2 className="section-title">How It Works</h2>
+        <p className="section-subtitle">
+          Three simple steps to keep every grocery run coordinated and stress-free.
+        </p>
         <div className="steps-container">
           <div className="step">
             <div className="step-number">1</div>
@@ -191,30 +259,25 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="footer">
-        <p>© 2025 SharedCart. All rights reserved.</p>
-        <div className="footer-links">
-          <a 
-            href="https://github.com/Leyley0323/MERN-Project" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="github-link"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              style={{ marginRight: '8px', verticalAlign: 'middle' }}
-            >
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            View on GitHub
-          </a>
+      <section className="cta-panel">
+        <h3>Ready to leave scattered notes behind?</h3>
+        <p>
+          Spin up your first list in seconds, invite the people you shop with, and watch everyone stay in sync.
+          SharedCart keeps conversations focused and shopping effortless.
+        </p>
+        <div className="hero-buttons" style={{ marginTop: '1.5rem' }}>
+          <Link to={user ? "/lists" : "/signup"} className="cta-button primary">
+            {user ? "Open My Lists" : "Create a Free Account"}
+          </Link>
+          {!user && (
+            <Link to="/login" className="cta-button secondary">
+              I already have an account
+            </Link>
+          )}
         </div>
-      </footer>
+      </section>
+
+      <Footer />
     </div>
   );
 }

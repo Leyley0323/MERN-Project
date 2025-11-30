@@ -1,107 +1,154 @@
-/* Root styles - full width for all pages */
-#root {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+.app-page {
   min-height: 100vh;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-#title {
-  font-size: 2em;
-  margin: 20px 0;
+.btn {
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
 }
 
-/* Auth page styles are in AuthPage.css */
-/* Button styles are also in AuthPage.css for auth pages */
-/* Keeping .buttons here for backwards compatibility with other components */
-.buttons {
-  background-color: #0d6b0d;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-top: 10px;
-  transition: all 0.3s ease;
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
-.buttons:hover{
-  background-color: #0a550a;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.btn-primary {
+  background: linear-gradient(120deg, #03d87f 0%, #02c46f 45%, #00b65f 100%);
+  color: #07130c;
+  box-shadow: 0 12px 30px rgba(3, 216, 127, 0.35);
 }
-.buttons:active{
-  transform: translateY(0);
-}
-
-/* Auth result styles moved to AuthPage.css */
-
-#loggedInDiv {
-  margin: 20px 0;
-  text-align: right;
-  padding: 10px;
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 20px 35px rgba(3, 216, 127, 0.4);
 }
 
-#userName {
-  margin-right: 10px;
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-strong);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-#accessUIDiv {
-  margin: 20px auto;
-  width: 600px;
-  text-align: left;
+.btn-ghost {
+  background: transparent;
+  color: var(--text-subtle);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-strong);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-#accessUIDiv input[type="text"] {
-  padding: 8px;
-  margin: 5px;
-  box-sizing: border-box;
+.btn-danger {
+  background: rgba(255, 107, 107, 0.15);
+  color: var(--danger);
+  border-color: rgba(255, 107, 107, 0.3);
+}
+.btn-danger:hover:not(:disabled) {
+  background: rgba(255, 107, 107, 0.25);
 }
 
-/* Card-related styles removed - not needed for SharedCart */
-
-/* Auth page styles moved to AuthPage.css */
-
-/* Auth input styles moved to AuthPage.css */
-
-/* Auth result styles moved to AuthPage.css */
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-subtle);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.input-field,
+.textarea-field,
+.select-field {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 14, 12, 0.75);
+  color: var(--text-strong);
+  font-size: 1rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  outline: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.input-field:focus,
+.textarea-field:focus,
+.select-field:focus {
+  border-color: rgba(3, 216, 127, 0.5);
+  box-shadow: 0 0 0 3px rgba(3, 216, 127, 0.08);
 }
 
-.card {
-  padding: 2em;
+.textarea-field {
+  resize: vertical;
+  min-height: 120px;
 }
 
-.read-the-docs {
-  color: #888;
+.glass-card {
+  background: rgba(5, 12, 10, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(var(--blur));
 }
 
-/* Auth page styles moved to AuthPage.css */
+.surface-card {
+  background: rgba(12, 20, 17, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.section-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  margin-bottom: 0.35rem;
+  display: inline-block;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  margin: 0 0 0.4rem;
+  color: var(--text-strong);
+}
+
+.section-subtitle {
+  margin: 0;
+  color: var(--text-subtle);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(3, 216, 127, 0.12);
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+}

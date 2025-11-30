@@ -5,6 +5,7 @@ import { getAuthHeaders, isLoggedIn } from '../utils/auth';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../AuthPage.css';
+import '../Dashboard.css';
 
 interface ListItem {
   _id: string;
@@ -413,15 +414,19 @@ export default function ListDetailPage() {
 
   if (loading && !list) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="app-page">
         <Header />
-        <div className="auth-page" style={{ flex: 1 }}>
-          <div className="auth-container">
-            <div style={{ textAlign: 'center', color: '#fff', padding: '20px' }}>
-              Loading list...
+        <main className="dashboard-page">
+          <div className="dashboard-shell">
+            <div className="dashboard-card">
+              <span className="section-eyebrow">Syncing</span>
+              <h2 className="section-title" style={{ marginBottom: '0.5rem' }}>
+                Loading list…
+              </h2>
+              <p className="section-subtitle">We’re pulling the freshest version for you.</p>
             </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -429,30 +434,20 @@ export default function ListDetailPage() {
 
   if (!list) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="app-page">
         <Header />
-        <div className="auth-page" style={{ flex: 1 }}>
-          <div className="auth-container">
-            <div style={{ textAlign: 'center', color: '#ff4444', padding: '20px' }}>
-              {error || 'List not found'}
+        <main className="dashboard-page">
+          <div className="dashboard-shell">
+            <div className="dashboard-card">
+              <span className="section-eyebrow">Oops</span>
+              <h2 className="section-title">List not found</h2>
+              <p className="section-subtitle">{error || 'Either it was removed or you lost access.'}</p>
+              <button className="btn btn-primary" style={{ marginTop: '1.5rem' }} onClick={() => navigate('/lists')}>
+                Back to Lists
+              </button>
             </div>
-            <button
-              onClick={() => navigate('/lists')}
-              style={{
-                backgroundColor: '#f7df05ff',
-                color: '#000',
-                border: 'none',
-                padding: '10px 20px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                margin: '20px auto',
-                display: 'block',
-              }}
-            >
-              Back to Lists
-            </button>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -461,621 +456,299 @@ export default function ListDetailPage() {
   const filteredItems = getFilteredItems();
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-page">
       <Header />
-      <div className="auth-page" style={{ flex: 1 }}>
-        <div className="auth-container" style={{ maxWidth: '800px' }}>
-        
-        <div style={{ marginBottom: '20px' }}>
-          <button
-            onClick={() => navigate('/lists')}
-            style={{
-              backgroundColor: '#666',
-              color: '#fff',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              marginBottom: '20px',
-            }}
-          >
+      <main className="dashboard-page">
+        <div className="dashboard-shell">
+          <button className="back-link" onClick={() => navigate('/lists')}>
             ← Back to Lists
           </button>
-        </div>
 
-        {/* Editable List Name */}
-        <div style={{ marginBottom: '20px' }}>
-          {editingListName ? (
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <input
-                type="text"
-                value={listNameValue}
-                onChange={(e) => setListNameValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleUpdateListName();
-                  } else if (e.key === 'Escape') {
+          <section className="dashboard-card">
+            {editingListName ? (
+              <div className="inline-actions">
+                <input
+                  type="text"
+                  className="inline-input"
+                  value={listNameValue}
+                  onChange={(e) => setListNameValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleUpdateListName();
+                    } else if (e.key === 'Escape') {
+                      setEditingListName(false);
+                      setListNameValue(list.name);
+                    }
+                  }}
+                  autoFocus
+                />
+                <button className="btn btn-primary" onClick={handleUpdateListName}>
+                  Save
+                </button>
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => {
                     setEditingListName(false);
                     setListNameValue(list.name);
-                  }
-                }}
-                style={{
-                  flex: 1,
-                  minWidth: '200px',
-                  padding: '10px',
-                  borderRadius: '6px',
-                  border: '2px solid #f7df05',
-                  backgroundColor: '#1a1a1a',
-                  color: '#fff',
-                  fontSize: '20px',
-                  fontWeight: '600',
-                  boxSizing: 'border-box',
-                }}
-                autoFocus
-              />
-              <button
-                onClick={handleUpdateListName}
-                style={{
-                  backgroundColor: '#03b320ff',
-                  color: '#000',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                }}
-              >
-                Save
-              </button>
-              <button
-                onClick={() => {
-                  setEditingListName(false);
-                  setListNameValue(list.name);
-                }}
-                style={{
-                  backgroundColor: '#666',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <h2 
-                style={{ 
-                  color: '#f7df05ff', 
-                  marginBottom: '10px',
-                  cursor: 'pointer',
-                  display: 'inline-block',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  transition: 'background-color 0.2s'
-                }}
-                onClick={() => setEditingListName(true)}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(247, 223, 5, 0.1)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                title="Click to edit list name"
-              >
-                {list.name} ✏️
-              </h2>
-            </div>
-          )}
-          {list.description && (
-            <p style={{ color: '#aaa', marginBottom: '20px', marginTop: '0' }}>{list.description}</p>
-          )}
-        </div>
-
-        <div style={{ 
-          backgroundColor: '#1a1a1a', 
-          padding: '15px', 
-          borderRadius: '8px', 
-          marginBottom: '20px' 
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-            <div>
-              <div style={{ color: '#fff', marginBottom: '5px' }}>
-                <strong>Code:</strong> <span style={{ color: '#f7df05ff', fontFamily: 'monospace' }}>{list.code}</span>
-              </div>
-              <div style={{ color: '#aaa', fontSize: '14px' }}>
-                Created by: {list.creatorName}
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={handleCopyCode}
-                style={{
-                  backgroundColor: '#333',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                }}
-              >
-                Copy Code
-              </button>
-              {list.isCreator ? (
-                <button
-                  onClick={handleDeleteList}
-                  style={{
-                    backgroundColor: '#ff4444',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
                   }}
                 >
-                  Delete List
+                  Cancel
                 </button>
-              ) : (
-                <button
-                  onClick={handleLeaveList}
-                  style={{
-                    backgroundColor: '#ff8800',
-                    color: '#fff',
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                  }}
-                >
-                  Leave List
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {error && (
-          <div style={{ 
-            color: '#ff4444', 
-            textAlign: 'center', 
-            marginBottom: '20px',
-            padding: '10px',
-            backgroundColor: '#330000',
-            borderRadius: '4px'
-          }}>
-            {error}
-          </div>
-        )}
-
-        {/* Search Bar */}
-        <div style={{ marginBottom: '20px' }}>
-          <input
-            type="text"
-            placeholder="Search items..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              fontSize: '16px',
-              border: '2px solid #444',
-              borderRadius: '8px',
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              boxSizing: 'border-box',
-              transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#f7df05';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(247, 223, 5, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#444';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          />
-        </div>
-
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '15px',
-          flexWrap: 'wrap',
-          gap: '10px'
-        }}>
-          <div style={{ color: '#03b320ff', fontSize: '18px', fontWeight: '600' }}>
-            {list.purchasedItems} of {list.totalItems} items purchased
-            {searchQuery && filteredItems.length !== list.items.length && (
-              <span style={{ color: '#aaa', fontSize: '14px', marginLeft: '10px' }}>
-                ({filteredItems.length} matching)
-              </span>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <h2 className="section-title" style={{ margin: 0 }} onClick={() => setEditingListName(true)}>
+                  {list.name} ✏️
+                </h2>
+                <span className="badge">Tap to rename</span>
+              </div>
             )}
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button
-              onClick={() => setFilter('all')}
-              style={{
-                backgroundColor: filter === 'all' ? '#03b320ff' : '#333',
-                color: '#fff',
-                border: 'none',
-                padding: '6px 12px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setFilter('unpurchased')}
-              style={{
-                backgroundColor: filter === 'unpurchased' ? '#03b320ff' : '#333',
-                color: '#fff',
-                border: 'none',
-                padding: '6px 12px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
-            >
-              Unpurchased
-            </button>
-            <button
-              onClick={() => setFilter('purchased')}
-              style={{
-                backgroundColor: filter === 'purchased' ? '#03b320ff' : '#333',
-                color: '#fff',
-                border: 'none',
-                padding: '6px 12px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
-            >
-              Purchased
-            </button>
-          </div>
-        </div>
+            {list.description && (
+              <p className="section-subtitle" style={{ textAlign: 'left', marginTop: '0.75rem' }}>
+                {list.description}
+              </p>
+            )}
 
-        {lastUpdated && (
-          <div style={{ 
-            color: '#888', 
-            fontSize: '12px', 
-            textAlign: 'right', 
-            marginBottom: '10px',
-            fontStyle: 'italic'
-          }}>
-            Last updated: {getTimeSinceUpdate()}
-          </div>
-        )}
+            <div className="list-toolbar" style={{ marginTop: '1.25rem' }}>
+              <div className="badge">
+                List Code • <strong>{list.code}</strong>
+              </div>
+              <div className="danger-zone">
+                <button className="btn btn-secondary" onClick={handleCopyCode}>
+                  Copy Code
+                </button>
+                {list.isCreator ? (
+                  <button className="btn btn-danger" onClick={handleDeleteList}>
+                    Delete List
+                  </button>
+                ) : (
+                  <button className="btn btn-danger" onClick={handleLeaveList}>
+                    Leave List
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
 
-        <form onSubmit={handleAddItem} style={{ marginBottom: '30px' }}>
-          <div style={{ 
-            display: 'flex', 
-            gap: '10px', 
-            alignItems: 'flex-end',
-            flexWrap: 'wrap'
-          }}>
-            <div style={{ flex: '1', minWidth: '200px' }}>
-              <label style={{ display: 'block', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
-                Item Name
-              </label>
+          {error && (
+            <div className="alert-card" style={{ color: 'var(--danger)' }}>
+              {error}
+            </div>
+          )}
+
+          <section className="dashboard-card">
+            <div className="list-toolbar">
+              <div>
+                <span className="section-eyebrow">Progress</span>
+                <h3 style={{ margin: 0 }}>
+                  {list.purchasedItems} / {list.totalItems} items purchased
+                  {searchQuery && filteredItems.length !== list.items.length && (
+                    <span style={{ color: 'var(--text-faint)', fontSize: '0.9rem', marginLeft: '0.5rem' }}>
+                      ({filteredItems.length} matching)
+                    </span>
+                  )}
+                </h3>
+              </div>
+              <div className="filters">
+                {(['all', 'unpurchased', 'purchased'] as const).map((option) => (
+                  <button
+                    key={option}
+                    className={`filter-chip ${filter === option ? 'active' : ''}`}
+                    type="button"
+                    onClick={() => setFilter(option)}
+                  >
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1rem' }}>
               <input
                 type="text"
-                value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
-                placeholder="Enter item name"
-                required
-                maxLength={200}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '6px',
-                  border: '2px solid #333',
-                  backgroundColor: '#1a1a1a',
-                  color: '#fff',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                }}
+                className="search-input"
+                placeholder="Search items..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div style={{ width: '100px' }}>
-              <label style={{ display: 'block', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
-                Qty
-              </label>
-              <input
-                type="number"
-                value={newItemQuantity}
-                onChange={(e) => setNewItemQuantity(e.target.value)}
-                min="1"
-                max="9999"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '6px',
-                  border: '2px solid #333',
-                  backgroundColor: '#1a1a1a',
-                  color: '#fff',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-            <div style={{ width: '120px' }}>
-              <label style={{ display: 'block', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
-                Weight (Optional)
-              </label>
-              <input
-                id="newItemWeight"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="Optional"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '6px',
-                  border: '2px solid #333',
-                  backgroundColor: '#1a1a1a',
-                  color: '#fff',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-            <div style={{ width: '80px' }}>
-              <label style={{ display: 'block', color: '#fff', marginBottom: '5px', fontSize: '14px' }}>
-                Unit
-              </label>
-              <select
-                id="newItemWeightUnit"
-                defaultValue="lbs"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '6px',
-                  border: '2px solid #333',
-                  backgroundColor: '#1a1a1a',
-                  color: '#fff',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                  cursor: 'pointer',
-                }}
-              >
-                <option value="lbs">lbs</option>
-                <option value="kg">kg</option>
-                <option value="oz">oz</option>
-                <option value="g">g</option>
-                <option value="lb">lb</option>
-              </select>
-            </div>
-            <button
-              type="submit"
-              disabled={addingItem || !newItemName.trim()}
-              style={{
-                backgroundColor: '#03b320ff',
-                color: '#000',
-                border: 'none',
-                padding: '10px 20px',
-                borderRadius: '6px',
-                cursor: addingItem || !newItemName.trim() ? 'not-allowed' : 'pointer',
-                fontWeight: '600',
-                fontSize: '16px',
-                opacity: addingItem || !newItemName.trim() ? 0.5 : 1,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {addingItem ? 'Adding...' : 'Add Item'}
-            </button>
-          </div>
-        </form>
 
-        {filteredItems.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            color: '#aaa', 
-            padding: '40px 20px',
-            backgroundColor: '#1a1a1a',
-            borderRadius: '8px',
-            border: '2px solid #333'
-          }}>
-            {searchQuery 
-              ? `No items found matching "${searchQuery}"`
-              : filter === 'all' 
-                ? 'No items in this list yet. Add one above!'
-                : `No ${filter} items.`
-            }
-          </div>
-        ) : (
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {filteredItems.map((item, index) => (
-              <li
-                key={item._id}
-                style={{
-                  backgroundColor: index % 2 === 0 ? '#1a1a1a' : '#252525',
-                  border: '1px solid #333',
-                  borderRadius: '6px',
-                  padding: '15px',
-                  marginBottom: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '15px',
-                  opacity: item.purchased ? 0.7 : 1,
-                }}
-              >
+            {lastUpdated && (
+              <div className="timestamp" style={{ marginTop: '0.75rem' }}>
+                Last refreshed {getTimeSinceUpdate()}
+              </div>
+            )}
+          </section>
+
+          <section className="dashboard-card">
+            <span className="section-eyebrow">Add item</span>
+            <form onSubmit={handleAddItem} className="item-form" style={{ marginTop: '1rem' }}>
+              <div className="field">
+                <label className="section-eyebrow" style={{ letterSpacing: '0.2em' }}>
+                  Item
+                </label>
                 <input
-                  type="checkbox"
-                  checked={item.purchased}
-                  onChange={() => handleTogglePurchased(item)}
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                  }}
+                  type="text"
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  placeholder="e.g., Almond milk"
+                  required
+                  maxLength={200}
+                  className="input-field"
                 />
-                
-                {editingItemId === item._id ? (
-                  <div style={{ flex: 1, display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+              </div>
+              <div className="field-small">
+                <label className="section-eyebrow">Qty</label>
+                <input
+                  type="number"
+                  value={newItemQuantity}
+                  onChange={(e) => setNewItemQuantity(e.target.value)}
+                  min="1"
+                  max="9999"
+                  className="input-field"
+                />
+              </div>
+              <div className="field-small">
+                <label className="section-eyebrow">Weight</label>
+                <input
+                  id="newItemWeight"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  className="input-field"
+                  placeholder="Optional"
+                />
+              </div>
+              <div className="field-tiny">
+                <label className="section-eyebrow">Unit</label>
+                <select id="newItemWeightUnit" defaultValue="lbs" className="select-field">
+                  <option value="lbs">lbs</option>
+                  <option value="kg">kg</option>
+                  <option value="oz">oz</option>
+                  <option value="g">g</option>
+                  <option value="lb">lb</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={addingItem || !newItemName.trim()}
+              >
+                {addingItem ? 'Adding…' : 'Add Item'}
+              </button>
+            </form>
+          </section>
+
+          <section className="dashboard-card">
+            {filteredItems.length === 0 ? (
+              <div className="empty-state">
+                {searchQuery
+                  ? `No items found matching “${searchQuery}”.`
+                  : filter === 'all'
+                  ? 'No items in this list yet. Add one above!'
+                  : `No ${filter} items right now.`}
+              </div>
+            ) : (
+              <ul className="item-list">
+                {filteredItems.map((item) => (
+                  <li
+                    key={item._id}
+                    className={`item-row ${item.purchased ? 'purchased' : ''}`}
+                  >
                     <input
-                      type="text"
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
-                      style={{
-                        flex: 1,
-                        minWidth: '200px',
-                        padding: '8px',
-                        borderRadius: '4px',
-                        border: '2px solid #03b320ff',
-                        backgroundColor: '#000',
-                        color: '#fff',
-                        fontSize: '16px',
-                      }}
-                      autoFocus
+                      type="checkbox"
+                      checked={item.purchased}
+                      onChange={() => handleTogglePurchased(item)}
                     />
-                    <input
-                      type="number"
-                      value={editingQuantity}
-                      onChange={(e) => setEditingQuantity(e.target.value)}
-                      min="1"
-                      max="9999"
-                      style={{
-                        width: '80px',
-                        padding: '8px',
-                        borderRadius: '4px',
-                        border: '2px solid #03b320ff',
-                        backgroundColor: '#000',
-                        color: '#fff',
-                        fontSize: '16px',
-                      }}
-                    />
-                    <input
-                      type="number"
-                      value={editingWeight}
-                      onChange={(e) => setEditingWeight(e.target.value)}
-                      step="0.01"
-                      min="0"
-                      placeholder="Weight (optional)"
-                      style={{
-                        width: '120px',
-                        padding: '8px',
-                        borderRadius: '4px',
-                        border: '2px solid #03b320ff',
-                        backgroundColor: '#000',
-                        color: '#fff',
-                        fontSize: '16px',
-                      }}
-                    />
-                    <select
-                      value={editingWeightUnit}
-                      onChange={(e) => setEditingWeightUnit(e.target.value)}
-                      style={{
-                        width: '70px',
-                        padding: '8px',
-                        borderRadius: '4px',
-                        border: '2px solid #03b320ff',
-                        backgroundColor: '#000',
-                        color: '#fff',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <option value="lbs">lbs</option>
-                      <option value="kg">kg</option>
-                      <option value="oz">oz</option>
-                      <option value="g">g</option>
-                      <option value="lb">lb</option>
-                    </select>
-                    <button
-                      onClick={() => handleSaveEdit(item._id)}
-                      style={{
-                        backgroundColor: '#03b320ff',
-                        color: '#000',
-                        border: 'none',
-                        padding: '8px 16px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                      }}
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={handleCancelEdit}
-                      style={{
-                        backgroundColor: '#666',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '8px 16px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => handleStartEdit(item)}>
-                      <div style={{ 
-                        color: item.purchased ? '#888' : '#fff', 
-                        textDecoration: item.purchased ? 'line-through' : 'none',
-                        fontSize: '16px',
-                        marginBottom: '5px',
-                      }}>
-                        <strong>{item.name}</strong>
-                        <span style={{ color: '#aaa', marginLeft: '10px' }}>× {item.quantity}</span>
-                        {item.weight && item.weightUnit && (
-                          <span style={{ color: '#f7df05', marginLeft: '10px', fontSize: '14px' }}>
-                            ({item.weight} {item.weightUnit})
-                          </span>
-                        )}
+
+                    {editingItemId === item._id ? (
+                      <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <input
+                          type="text"
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          className="input-field"
+                          style={{ flex: 1, minWidth: '200px' }}
+                        />
+                        <input
+                          type="number"
+                          value={editingQuantity}
+                          onChange={(e) => setEditingQuantity(e.target.value)}
+                          min="1"
+                          max="9999"
+                          className="input-field"
+                          style={{ maxWidth: '90px' }}
+                        />
+                        <input
+                          type="number"
+                          value={editingWeight}
+                          onChange={(e) => setEditingWeight(e.target.value)}
+                          step="0.01"
+                          min="0"
+                          className="input-field"
+                          style={{ maxWidth: '120px' }}
+                        />
+                        <select
+                          value={editingWeightUnit}
+                          onChange={(e) => setEditingWeightUnit(e.target.value)}
+                          className="select-field"
+                          style={{ maxWidth: '90px' }}
+                        >
+                          <option value="lbs">lbs</option>
+                          <option value="kg">kg</option>
+                          <option value="oz">oz</option>
+                          <option value="g">g</option>
+                          <option value="lb">lb</option>
+                        </select>
+                        <div className="inline-actions">
+                          <button className="btn btn-primary" type="button" onClick={() => handleSaveEdit(item._id)}>
+                            Save
+                          </button>
+                          <button className="btn btn-ghost" type="button" onClick={handleCancelEdit}>
+                            Cancel
+                          </button>
+                        </div>
                       </div>
-                      <div style={{ color: '#888', fontSize: '12px' }}>
-                        Added by {item.addedByName}
-                        {item.purchased && item.purchasedBy && (
-                          <span> • Purchased by {item.purchasedBy.firstName} {item.purchasedBy.lastName}</span>
-                        )}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleDeleteItem(item._id)}
-                      style={{
-                        backgroundColor: 'transparent',
-                        color: '#ff4444',
-                        border: '1px solid #ff4444',
-                        padding: '6px 12px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#ff4444';
-                        e.currentTarget.style.color = '#fff';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#ff4444';
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+                    ) : (
+                      <>
+                        <div
+                          className="item-row-content"
+                          onClick={() => handleStartEdit(item)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <h4 style={{ textDecoration: item.purchased ? 'line-through' : 'none' }}>
+                            {item.name}
+                            <span style={{ color: 'var(--text-subtle)', marginLeft: '0.5rem' }}>
+                              × {item.quantity}
+                            </span>
+                            {item.weight && item.weightUnit && (
+                              <span style={{ color: 'var(--accent-strong)', marginLeft: '0.5rem', fontSize: '0.9rem' }}>
+                                ({item.weight} {item.weightUnit})
+                              </span>
+                            )}
+                          </h4>
+                          <small>
+                            Added by {item.addedByName}
+                            {item.purchased && item.purchasedBy && (
+                              <span>
+                                {' '}
+                                • Purchased by {item.purchasedBy.firstName} {item.purchasedBy.lastName}
+                              </span>
+                            )}
+                          </small>
+                        </div>
+                        <button className="btn btn-danger" onClick={() => handleDeleteItem(item._id)}>
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

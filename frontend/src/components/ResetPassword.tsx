@@ -69,16 +69,80 @@ function ResetPassword()
     setConfirmPassword( e.target.value );
   }
 
+    const isSuccess = message && message.includes('successfully');
+
     return(
       <div id="resetPasswordDiv">
-        <span id="inner-title">RESET PASSWORD</span><br />
-        <input type="password" id="password" placeholder="New Password" 
-          value={password} onChange={handlePasswordChange} /><br />
-        <input type="password" id="confirmPassword" placeholder="Confirm Password" 
-          value={confirmPassword} onChange={handleConfirmPasswordChange} /><br />
-        <input type="submit" id="resetButton" className="buttons" value = "Reset Password"
-          onClick={doResetPassword} />
-        <span id="resetResult">{message}</span>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <span id="inner-title">Reset Your Password</span>
+          <p style={{ 
+            color: 'var(--text-subtle)', 
+            fontSize: '0.95rem', 
+            marginTop: '0.5rem',
+            marginBottom: 0 
+          }}>
+            Enter your new password below
+          </p>
+        </div>
+
+        <div className="form-group">
+          <div className="input-wrapper">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="input-icon">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="New Password" 
+              value={password} 
+              onChange={handlePasswordChange}
+              className="form-input"
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="input-wrapper">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="input-icon">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              placeholder="Confirm Password" 
+              value={confirmPassword} 
+              onChange={handleConfirmPasswordChange}
+              className="form-input"
+            />
+          </div>
+        </div>
+
+        {message && (
+          <div className={`message-box ${isSuccess ? 'success' : 'error'}`}>
+            {isSuccess ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px' }}>
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '8px' }}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            )}
+            <span id="resetResult">{message}</span>
+          </div>
+        )}
+
+        <input 
+          type="submit" 
+          id="resetButton" 
+          className="buttons" 
+          value="Reset Password"
+          onClick={doResetPassword} 
+        />
      </div>
     );
 };

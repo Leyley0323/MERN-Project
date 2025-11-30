@@ -5,6 +5,7 @@ import { getAuthHeaders, isLoggedIn } from '../utils/auth';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../AuthPage.css';
+import '../Dashboard.css';
 
 export default function CreateListPage() {
   const [name, setName] = useState('');
@@ -51,149 +52,77 @@ export default function CreateListPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-page">
       <Header />
-      <div className="auth-page" style={{ flex: 1 }}>
-        <div className="auth-container" style={{ maxWidth: '500px' }}>
-          <div style={{ marginBottom: '20px' }}>
-          <button
-            onClick={() => navigate('/lists')}
-            style={{
-              backgroundColor: '#666',
-              color: '#fff',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-            }}
-          >
+      <main className="dashboard-page">
+        <div className="dashboard-shell">
+          <button className="back-link" onClick={() => navigate('/lists')}>
             ← Back to Lists
           </button>
+
+          <section className="dashboard-card">
+            <span className="section-eyebrow">Create</span>
+            <h2 className="section-title">New Shopping List</h2>
+            <p className="section-subtitle">
+              Give your list a name, add an optional description, and invite your roommates or family.
+            </p>
+
+            {error && (
+              <div className="alert-card" style={{ marginTop: '1.25rem', color: 'var(--danger)' }}>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="form-grid" style={{ marginTop: '1.5rem' }}>
+              <div>
+                <label className="section-eyebrow" style={{ letterSpacing: '0.2em' }}>
+                  List name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  maxLength={100}
+                  className="input-field"
+                  placeholder="e.g., Weekly Groceries"
+                />
+              </div>
+
+              <div>
+                <label className="section-eyebrow" style={{ letterSpacing: '0.2em' }}>
+                  Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  maxLength={500}
+                  className="textarea-field"
+                  placeholder="Add context for everyone joining this list (optional)"
+                />
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={loading}
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading || !name.trim()}
+                >
+                  {loading ? 'Creating…' : 'Create List'}
+                </button>
+              </div>
+            </form>
+          </section>
         </div>
-
-        <h2 style={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
-          Create New Shopping List
-        </h2>
-
-        {error && (
-          <div style={{ 
-            color: '#ff4444', 
-            textAlign: 'center', 
-            marginBottom: '20px',
-            padding: '10px',
-            backgroundColor: '#330000',
-            borderRadius: '4px'
-          }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              color: '#fff', 
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              List Name *
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              maxLength={100}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '6px',
-                border: '2px solid #333',
-                backgroundColor: '#1a1a1a',
-                color: '#fff',
-                fontSize: '16px',
-                boxSizing: 'border-box',
-              }}
-              placeholder="e.g., Weekly Groceries"
-            />
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              color: '#fff', 
-              marginBottom: '8px',
-              fontWeight: '500'
-            }}>
-              Description (Optional)
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              maxLength={500}
-              rows={4}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '6px',
-                border: '2px solid #333',
-                backgroundColor: '#1a1a1a',
-                color: '#fff',
-                fontSize: '16px',
-                boxSizing: 'border-box',
-                resize: 'vertical',
-                fontFamily: 'inherit',
-              }}
-              placeholder="Add a description for your list..."
-            />
-          </div>
-
-          <div style={{ 
-            display: 'flex', 
-            gap: '10px', 
-            justifyContent: 'center',
-            marginTop: '30px'
-          }}>
-            <button
-              type="button"
-              onClick={handleCancel}
-              disabled={loading}
-              style={{
-                backgroundColor: '#666',
-                color: '#fff',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontWeight: '600',
-                fontSize: '16px',
-                opacity: loading ? 0.5 : 1,
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !name.trim()}
-              style={{
-                backgroundColor: '#03b320ff',
-                color: '#000',
-                border: 'none',
-                padding: '12px 24px',
-                borderRadius: '6px',
-                cursor: loading || !name.trim() ? 'not-allowed' : 'pointer',
-                fontWeight: '600',
-                fontSize: '16px',
-                opacity: loading || !name.trim() ? 0.5 : 1,
-              }}
-            >
-              {loading ? 'Creating...' : 'Create List'}
-            </button>
-          </div>
-        </form>
-        </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

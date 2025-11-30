@@ -1,4 +1,4 @@
-/* Auth Pages (Login, Signup, Forgot Password, Reset Password) */
+/* Shared form layout */
 .auth-page {
   width: 100%;
   min-height: 100vh;
@@ -6,236 +6,292 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 40px 20px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  background-color: #1a1a1a;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem) 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(3, 216, 127, 0.15), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(249, 228, 0, 0.15), transparent 35%);
+  filter: blur(80px);
+  opacity: 0.9;
 }
 
 .auth-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 460px;
   margin: 0 auto;
-  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
 }
 
-#loginDiv, #signupDiv, #verifyDiv, #forgotPasswordDiv, #resetPasswordDiv {
-  margin: 20px auto;
+#loginDiv,
+#signupDiv,
+#verifyDiv,
+#forgotPasswordDiv,
+#resetPasswordDiv {
+  margin: 0 auto 1.5rem;
   width: 100%;
-  max-width: 400px;
   text-align: left;
-  padding: 30px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background-color: #2a2a2a;
-  box-sizing: border-box;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(4, 12, 10, 0.85);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(25px);
 }
 
 #inner-title {
-  font-weight: bold;
-  font-size: 1.5em;
-  color: #f7df05;
-  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: var(--text-strong);
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+#inner-title + span {
   display: block;
   text-align: center;
+  color: var(--text-subtle);
+  margin-bottom: 1.5rem;
 }
 
-#loginDiv input[type="text"],
-#loginDiv input[type="password"],
-#loginDiv input[type="email"],
-#signupDiv input[type="text"],
-#signupDiv input[type="email"],
-#signupDiv input[type="password"],
-#resetPasswordDiv input[type="password"],
-#forgotPasswordDiv input[type="email"],
-#verifyDiv input[type="text"] {
+#loginDiv input[type='text'],
+#loginDiv input[type='password'],
+#loginDiv input[type='email'],
+#signupDiv input[type='text'],
+#signupDiv input[type='email'],
+#signupDiv input[type='password'],
+#resetPasswordDiv input[type='password'],
+#forgotPasswordDiv input[type='email'],
+#verifyDiv input[type='text'] {
   width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #555;
-  border-radius: 6px;
-  background-color: #1a1a1a;
-  color: white;
-  font-size: 16px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 0.9rem 1rem;
+  margin: 0.35rem 0 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(6, 12, 10, 0.9);
+  color: var(--text-strong);
+  font-size: 1rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-#loginDiv input[type="text"]:focus,
-#loginDiv input[type="password"]:focus,
-#loginDiv input[type="email"]:focus,
-#signupDiv input[type="text"]:focus,
-#signupDiv input[type="email"]:focus,
-#signupDiv input[type="password"]:focus,
-#resetPasswordDiv input[type="password"]:focus,
-#forgotPasswordDiv input[type="email"]:focus {
+#loginDiv input[type='text']:focus,
+#loginDiv input[type='password']:focus,
+#loginDiv input[type='email']:focus,
+#signupDiv input[type='text']:focus,
+#signupDiv input[type='email']:focus,
+#signupDiv input[type='password']:focus,
+#resetPasswordDiv input[type='password']:focus,
+#forgotPasswordDiv input[type='email']:focus {
   outline: none;
-  border-color: #f7df05;
-  box-shadow: 0 0 0 2px rgba(247, 223, 5, 0.2);
+  border-color: rgba(3, 216, 127, 0.6);
+  box-shadow: 0 0 0 4px rgba(3, 216, 127, 0.12);
 }
 
-#loginDiv input[type="text"]::placeholder,
-#loginDiv input[type="password"]::placeholder,
-#loginDiv input[type="email"]::placeholder,
-#signupDiv input[type="text"]::placeholder,
-#signupDiv input[type="email"]::placeholder,
-#signupDiv input[type="password"]::placeholder,
-#resetPasswordDiv input[type="password"]::placeholder,
-#forgotPasswordDiv input[type="email"]::placeholder {
-  color: #999;
+#loginDiv input::placeholder,
+#signupDiv input::placeholder,
+#resetPasswordDiv input::placeholder,
+#forgotPasswordDiv input::placeholder {
+  color: var(--text-faint);
 }
 
-#loginResult, #signupResult, #resetResult {
+#loginResult,
+#signupResult,
+#resetResult {
   display: block;
-  margin-top: 15px;
-  color: #ff4444;
-  font-size: 14px;
-  min-height: 20px;
-  word-wrap: break-word;
+  margin-top: 0.5rem;
+  color: var(--danger);
+  font-size: 0.95rem;
+  min-height: 22px;
 }
 
 #signupResult.success {
-  color: #4CAF50;
+  color: var(--accent);
 }
 
-#verifyDiv p {
-  margin: 15px 0;
-  color: #e0e0e0;
-  line-height: 1.6;
+/* Enhanced form styling */
+.form-group {
+  margin-bottom: 1rem;
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-faint);
+  pointer-events: none;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.9rem 1rem 0.9rem 2.75rem !important;
+  margin: 0 !important;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(6, 12, 10, 0.9);
+  color: var(--text-strong);
+  font-size: 1rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(3, 216, 127, 0.6);
+  box-shadow: 0 0 0 4px rgba(3, 216, 127, 0.12);
+  transform: translateY(-1px);
+}
+
+.form-input:focus + .input-icon,
+.input-wrapper:focus-within .input-icon {
+  color: var(--accent);
+}
+
+.message-box {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  gap: 0.5rem;
+  animation: slideIn 0.3s ease;
+}
+
+.message-box.success {
+  background: rgba(3, 216, 127, 0.15);
+  border: 1px solid rgba(3, 216, 127, 0.3);
+  color: var(--accent);
+}
+
+.message-box.error {
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: var(--danger);
+}
+
+.message-box svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#verifyDiv p,
 #forgotPasswordDiv p {
-  margin: 10px 0 20px 0;
-  color: #b0b0b0;
-  font-size: 14px;
+  margin: 0 0 1rem;
+  color: var(--text-subtle);
   line-height: 1.6;
 }
 
 #signuptitle {
-  color: #e0e0e0;
-  font-size: 14px;
+  color: var(--text-subtle);
+  font-size: 0.95rem;
   display: block;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 1.5rem 0 0.5rem;
 }
 
-/* Links in auth forms */
 #loginDiv a,
 #signupDiv a,
 #forgotPasswordDiv a,
 #resetPasswordDiv a {
-  color: #f7df05;
+  color: var(--accent);
   text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s ease;
-  display: inline-block;
-  margin-top: 10px;
-  word-wrap: break-word;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
 }
 
 #loginDiv a:hover,
 #signupDiv a:hover,
 #forgotPasswordDiv a:hover,
 #resetPasswordDiv a:hover {
-  color: #03b320;
-  text-decoration: underline;
+  color: var(--accent-strong);
 }
 
-/* Shared button styles */
-.buttons {
-  background-color: #0d6b0d;
-  color: white;
-  padding: 12px 24px;
+.buttons,
+#loginDiv input[type='submit'],
+#signupDiv input[type='submit'],
+#resetPasswordDiv input[type='submit'],
+#forgotPasswordDiv input[type='submit'] {
+  background: linear-gradient(120deg, #03d87f 0%, #02c46f 40%, #00b461 100%);
+  color: #041109;
+  padding: 0.95rem 1.25rem;
   border: none;
   cursor: pointer;
-  border-radius: 6px;
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  border-radius: 999px;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
-  box-sizing: border-box;
+  box-shadow: 0 15px 30px rgba(3, 216, 127, 0.35);
 }
 
-.buttons:hover {
-  background-color: #0a550a;
+.buttons:hover,
+#loginDiv input[type='submit']:hover,
+#signupDiv input[type='submit']:hover,
+#resetPasswordDiv input[type='submit']:hover,
+#forgotPasswordDiv input[type='submit']:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 35px rgba(3, 216, 127, 0.45);
 }
 
-.buttons:active {
+.buttons:active,
+#loginDiv input[type='submit']:active,
+#signupDiv input[type='submit']:active,
+#resetPasswordDiv input[type='submit']:active,
+#forgotPasswordDiv input[type='submit']:active {
   transform: translateY(0);
 }
 
-#loginDiv input[type="submit"],
-#signupDiv input[type="submit"],
-#resetPasswordDiv input[type="submit"],
-#forgotPasswordDiv input[type="submit"] {
-  background-color: #0d6b0d;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-#loginDiv input[type="submit"]:hover,
-#signupDiv input[type="submit"]:hover,
-#resetPasswordDiv input[type="submit"]:hover,
-#forgotPasswordDiv input[type="submit"]:hover {
-  background-color: #0a550a;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#loginDiv input[type="submit"]:active,
-#signupDiv input[type="submit"]:active,
-#resetPasswordDiv input[type="submit"]:active,
-#forgotPasswordDiv input[type="submit"]:active {
-  transform: translateY(0);
-}
-
-/* Page Title Component for Auth Pages */
 #page-title {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-#page-title img {
-  max-width: 100%;
-  height: auto;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--text-subtle);
 }
 
 #page-title #title {
-  font-size: 2em;
-  margin: 10px 0;
-  color: #f7df05;
+  font-size: 2.8rem;
+  color: var(--text-strong);
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .auth-page {
-    padding: 20px 15px;
+    padding: 2rem 1.25rem;
   }
 
-  #loginDiv, #signupDiv, #verifyDiv, #forgotPasswordDiv, #resetPasswordDiv {
-    padding: 20px;
-    margin: 10px auto;
-  }
-
-  #inner-title {
-    font-size: 1.3em;
+  #loginDiv,
+  #signupDiv,
+  #verifyDiv,
+  #forgotPasswordDiv,
+  #resetPasswordDiv {
+    padding: 1.5rem;
   }
 }
 

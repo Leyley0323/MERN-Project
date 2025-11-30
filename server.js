@@ -224,7 +224,7 @@ app.post('/api/login', async (req, res, next) =>
 
     if (!login || !password)
     {
-      error = 'Login and password are required';
+      error = 'Username and password are required';
       var ret = { id: -1, firstName: '', lastName: '', emailVerified: false, error: error };
       return res.status(400).json(ret);
     }
@@ -1229,8 +1229,31 @@ app.post('/api/lists/:listId/leave', verifyAuth, async (req, res) => {
   }
 });
 
-// ============ OLD CARD ENDPOINTS (REMOVED - Not needed for SharedCart) ============
-// Card-related endpoints have been removed as they are not needed for the shopping list application
+// Stats endpoint - public, no auth required
+app.get('/api/stats', async (req, res) => {
+  try {
+    const users = await User.countDocuments();
+    const lists = await ShoppingList.countDocuments();
+    const items = await ListItem.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      data: {
+        users,
+        lists,
+        items
+      },
+      error: ''
+    });
+  } catch (error) {
+    console.error('[/api/stats] Error:', error);
+    res.status(500).json({
+      success: false,
+      data: null,
+      error: error.message || 'Failed to fetch stats'
+    });
+  }
+});
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

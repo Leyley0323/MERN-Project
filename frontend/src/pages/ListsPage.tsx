@@ -5,6 +5,7 @@ import { getAuthHeaders, isLoggedIn } from '../utils/auth';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../AuthPage.css';
+import '../Dashboard.css';
 
 interface ShoppingList {
   _id: string;
@@ -93,233 +94,122 @@ export default function ListsPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="app-page">
         <Header />
-        <div className="auth-page" style={{ flex: 1 }}>
-          <div className="auth-container">
-            <div style={{ textAlign: 'center', color: '#fff', padding: '20px' }}>
-              Loading your lists...
+        <main className="dashboard-page">
+          <div className="dashboard-shell">
+            <div className="dashboard-card">
+              <span className="section-eyebrow">Syncing</span>
+              <h2 className="section-title" style={{ marginBottom: '0.5rem' }}>
+                Loading your lists…
+              </h2>
+              <p className="section-subtitle">Hang tight while we fetch the latest updates.</p>
             </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-page">
       <Header />
-      <div className="auth-page" style={{ flex: 1 }}>
-        <div className="auth-container" style={{ maxWidth: '800px' }}>
-        
-        <div style={{ marginBottom: '20px' }}>
-          <button
-            onClick={() => navigate('/')}
-            style={{
-              backgroundColor: '#666',
-              color: '#fff',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-            }}
-          >
+      <main className="dashboard-page">
+        <div className="dashboard-shell">
+          <button className="back-link" onClick={() => navigate('/')}>
             ← Back to Home
           </button>
-        </div>
 
-        <h2 style={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
-          My Shopping Lists
-        </h2>
-
-        {/* Search Bar */}
-        <div style={{ marginBottom: '25px' }}>
-          <input
-            type="text"
-            placeholder="Search lists by name, description, code, or creator..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              fontSize: '16px',
-              border: '2px solid #444',
-              borderRadius: '8px',
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              boxSizing: 'border-box',
-              transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#f7df05';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(247, 223, 5, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#444';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          />
-        </div>
-
-        {error && (
-          <div style={{ 
-            color: '#ff4444', 
-            textAlign: 'center', 
-            marginBottom: '20px',
-            padding: '10px',
-            backgroundColor: '#330000',
-            borderRadius: '4px'
-          }}>
-            {error}
-          </div>
-        )}
-
-        <div style={{ 
-          display: 'flex', 
-          gap: '10px', 
-          justifyContent: 'center', 
-          marginBottom: '30px',
-          flexWrap: 'wrap'
-        }}>
-          <button
-            onClick={handleCreateList}
-            style={{
-              backgroundColor: '#03b320ff',
-              color: '#000',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '16px',
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#f7df05ff')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#03b320ff')}
-          >
-            Create New List
-          </button>
-          <button
-            onClick={handleJoinList}
-            style={{
-              backgroundColor: '#f7df05ff',
-              color: '#000',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '16px',
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#03b320ff')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#f7df05ff')}
-          >
-            Join List
-          </button>
-        </div>
-
-        {lists.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            color: '#fff', 
-            padding: '40px 20px',
-            backgroundColor: '#1a1a1a',
-            borderRadius: '8px',
-            border: '2px solid #333'
-          }}>
-            <p style={{ fontSize: '18px', marginBottom: '10px' }}>
-              You don't have any lists yet.
-            </p>
-            <p style={{ fontSize: '14px', color: '#aaa' }}>
-              Create a new list or join an existing one to get started!
-            </p>
-          </div>
-        ) : filteredLists.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            color: '#fff', 
-            padding: '40px 20px',
-            backgroundColor: '#1a1a1a',
-            borderRadius: '8px',
-            border: '2px solid #333'
-          }}>
-            <p style={{ fontSize: '18px', marginBottom: '10px' }}>
-              No lists found matching "{searchQuery}"
-            </p>
-            <p style={{ fontSize: '14px', color: '#aaa' }}>
-              Try a different search term
-            </p>
-          </div>
-        ) : (
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-            gap: '20px' 
-          }}>
-            {filteredLists.map((list) => (
-              <div
-                key={list._id}
-                onClick={() => handleViewList(list._id)}
-                style={{
-                  backgroundColor: '#1a1a1a',
-                  border: '2px solid #333',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = '#03b320ff';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(3, 179, 32, 0.3)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = '#333';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <h3 style={{ 
-                  color: '#f7df05ff', 
-                  marginTop: 0, 
-                  marginBottom: '10px',
-                  fontSize: '20px'
-                }}>
-                  {list.name}
-                </h3>
-                {list.description && (
-                  <p style={{ 
-                    color: '#aaa', 
-                    fontSize: '14px', 
-                    marginBottom: '10px' 
-                  }}>
-                    {list.description}
-                  </p>
-                )}
-                <div style={{ color: '#fff', fontSize: '14px', marginBottom: '8px' }}>
-                  <strong>Code:</strong> {list.code}
-                </div>
-                <div style={{ color: '#fff', fontSize: '14px', marginBottom: '8px' }}>
-                  <strong>Created by:</strong> {list.creatorName}
-                </div>
-                <div style={{ color: '#03b320ff', fontSize: '14px' }}>
-                  {list.purchasedItems} of {list.totalItems} items purchased
-                </div>
-                <div style={{ 
-                  color: '#888', 
-                  fontSize: '12px', 
-                  marginTop: '10px',
-                  fontStyle: 'italic'
-                }}>
-                  Updated {new Date(list.updatedAt).toLocaleDateString()}
-                </div>
+          <section className="dashboard-card">
+            <div className="dashboard-header">
+              <div>
+                <span className="section-eyebrow">Shared Lists</span>
+                <h2 className="section-title">My Shopping Lists</h2>
+                <p className="section-subtitle">
+                  Create, join, and manage collaborative lists with real-time updates.
+                </p>
               </div>
-            ))}
-          </div>
-        )}
+              <div className="dashboard-actions">
+                <button className="btn btn-secondary" onClick={handleJoinList}>
+                  Join List
+                </button>
+                <button className="btn btn-primary" onClick={handleCreateList}>
+                  Create New List
+                </button>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.5rem' }}>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search lists by name, description, code, or creator…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            {error && (
+              <div className="alert-card" style={{ marginTop: '1.25rem', color: 'var(--danger)' }}>
+                {error}
+              </div>
+            )}
+
+            {lists.length === 0 ? (
+              <div className="alert-card empty-state" style={{ marginTop: '1.5rem' }}>
+                <h3 style={{ marginTop: 0, color: 'var(--text-strong)' }}>No lists yet</h3>
+                <p>
+                  Start by creating a new list or join an existing one using a share code.
+                </p>
+              </div>
+            ) : filteredLists.length === 0 ? (
+              <div className="alert-card empty-state" style={{ marginTop: '1.5rem' }}>
+                <h3 style={{ marginTop: 0, color: 'var(--text-strong)' }}>
+                  Nothing matched “{searchQuery}”
+                </h3>
+                <p>Try a different search term or clear the filter.</p>
+              </div>
+            ) : (
+              <div className="list-grid" style={{ marginTop: '1.5rem' }}>
+                {filteredLists.map((list) => (
+                  <article
+                    key={list._id}
+                    className="list-card"
+                    onClick={() => handleViewList(list._id)}
+                  >
+                    <small>List Code • {list.code}</small>
+                    <h3>{list.name}</h3>
+                    {list.description && <p>{list.description}</p>}
+                    <div className="list-meta">
+                      <span>Creator · {list.creatorName}</span>
+                      <span className="progress-pill">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        {list.purchasedItems} / {list.totalItems} purchased
+                      </span>
+                    </div>
+                    <div className="timestamp">
+                      Updated {new Date(list.updatedAt).toLocaleDateString()}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );
