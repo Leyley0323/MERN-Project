@@ -195,7 +195,7 @@ function HomePage() {
               </strong>
             </div>
             <div className="stat-card">
-              <span>Groups syncing</span>
+              <span>Users joined</span>
               <strong>
                 {statsLoading ? '...' : formatNumber(stats.users)}
               </strong>
